@@ -78,6 +78,12 @@
             margin-bottom: 40px;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -92,6 +98,30 @@
 
         .logo i {
             font-size: 2.2rem;
+        }
+
+        .settings-toggle {
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 101; /* Ensure it's above panel when panel might overlap slightly before animating */
+        }
+
+        .settings-toggle:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: rotate(30deg);
+        }
+
+        .settings-toggle i {
+            font-size: 1.3rem;
+            color: #64ffda;
         }
 
         .stats {
@@ -179,12 +209,37 @@
             font-size: 4rem;
             font-weight: 300;
             font-variant-numeric: tabular-nums;
+            position: relative;
+            z-index: 10;
         }
 
         .timer-label {
             color: #a0a0a0;
             font-size: 1.1rem;
             margin-top: 10px;
+        }
+
+        .breathing-bubble {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 50%;
+            filter: blur(20px);
+            z-index: 1;
+            animation: breathe 3s ease-in-out infinite;
+            display: none; /* Initially hidden, JS will control based on toggle */
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
         }
 
         .controls {
@@ -264,13 +319,18 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            color: #a0a0a0; /* Default color for inactive mode buttons */
         }
-
         .mode-btn.active {
             background: linear-gradient(45deg, #2196f3, #64ffda);
             color: #0c0c0c;
             box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
         }
+        .mode-btn:not(.active):hover {
+            color: #ffffff;
+            background: rgba(100, 255, 218, 0.1);
+        }
+
 
         .suggestions-section {
             width: 300px;
@@ -345,9 +405,31 @@
             font-size: 0.95rem;
         }
 
-        .settings {
-            margin-top: 40px;
+        /* 设置面板 */
+        .settings-panel {
+            position: absolute;
+            top: 90px; /* Adjusted if header height changes */
+            left: 20px;
+            background: rgba(15, 23, 42, 0.95); /* Slightly darker/more opaque for better readability */
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            width: 300px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-20px) translateX(-100%); /* Initial off-screen */
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.4s ease, opacity 0.4s ease; /* Smoother transition */
         }
+
+        .settings-panel.show {
+            transform: translateY(0) translateX(0); /* Slide in */
+            opacity: 1;
+            pointer-events: all;
+        }
+
 
         .setting-item {
             display: flex;
@@ -355,6 +437,9 @@
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .setting-item:last-child {
+            border-bottom: none;
         }
 
         .setting-label {
@@ -418,7 +503,7 @@
             border-radius: 15px;
             padding: 15px 25px;
             backdrop-filter: blur(10px);
-            transform: translateX(400px);
+            transform: translateX(calc(100% + 30px)); /* Start off-screen */
             transition: transform 0.4s ease;
             z-index: 1000;
             display: flex;
@@ -435,29 +520,15 @@
             color: #64ffda;
         }
 
-        .focus-mode .progress-ring-circle {
-            stroke: #64ffda;
-        }
+        /* Mode specific styles */
+        .focus-mode .progress-ring-circle { stroke: url(#gradientFocus); }
+        .short-break-mode .progress-ring-circle { stroke: url(#gradientShortBreak); }
+        .long-break-mode .progress-ring-circle { stroke: url(#gradientLongBreak); }
 
-        .short-break-mode .progress-ring-circle {
-            stroke: #2196f3;
-        }
+        .focus-mode .timer-mode { color: #64ffda; }
+        .short-break-mode .timer-mode { color: #2196f3; }
+        .long-break-mode .timer-mode { color: #9c27b0; }
 
-        .long-break-mode .progress-ring-circle {
-            stroke: #9c27b0;
-        }
-
-        .focus-mode .timer-mode {
-            color: #64ffda;
-        }
-
-        .short-break-mode .timer-mode {
-            color: #2196f3;
-        }
-
-        .long-break-mode .timer-mode {
-            color: #9c27b0;
-        }
 
         @media (max-width: 900px) {
             .main-content {
@@ -466,6 +537,7 @@
             
             .suggestions-section {
                 width: 100%;
+                margin-top: 20px; /* Add some space when stacked */
             }
             
             .timer-display {
@@ -476,6 +548,15 @@
             header {
                 flex-direction: column;
                 gap: 20px;
+                align-items: stretch; /* Make items stretch */
+            }
+
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .stats {
+                justify-content: space-around; /* Distribute stats better */
             }
         }
 
@@ -492,32 +573,62 @@
             .stats {
                 width: 100%;
                 justify-content: space-around;
+                padding: 10px 15px; /* Slightly reduce padding */
             }
+             .stat-value { font-size: 1.5rem; }
+             .stat-label { font-size: 0.8rem; }
             
             .controls {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: 10px; /* Reduce gap for wrapped buttons */
             }
             
             .btn {
                 padding: 10px 20px;
+                font-size: 0.9rem; /* Slightly smaller buttons */
+            }
+
+            .mode-selector {
+                flex-wrap: wrap; /* Allow mode buttons to wrap */
+                justify-content: center;
+            }
+            .mode-btn {
+                padding: 10px 15px; /* Adjust padding for smaller screens */
+                margin: 5px; /* Add margin for wrapped buttons */
+            }
+
+            .settings-panel {
+                width: calc(100% - 40px); /* Full width minus padding */
+                left: 20px;
+                right: 20px;
+                top: 70px; /* Adjust if header gets smaller */
+            }
+            .notification {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 背景粒子 -->
     <div class="particles" id="particles"></div>
     
-    <!-- 量子环 -->
     <div class="quantum-ring" style="width: 800px; height: 800px; top: -400px; right: -400px;"></div>
     <div class="quantum-ring" style="width: 600px; height: 600px; bottom: -300px; left: -300px;"></div>
 
     <div class="container">
         <header>
-            <div class="logo">
-                <i class="fas fa-atom"></i>
-                <span>量子番茄钟</span>
+            <div class="header-left">
+                <div class="settings-toggle" id="settings-toggle">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="logo">
+                    <i class="fas fa-atom"></i>
+                    <span>量子番茄钟</span>
+                </div>
             </div>
             <div class="stats">
                 <div class="stat-item">
@@ -535,15 +646,74 @@
             </div>
         </header>
         
+        <div class="settings-panel" id="settings-panel">
+            <h3 class="card-title"><i class="fas fa-cog"></i> 设置</h3>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-volume-up"></i>
+                    <span>提示音</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sound-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-bell"></i>
+                    <span>结束通知</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="notification-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-vibrate"></i>
+                    <span>震动提醒</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="vibration-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-paint-brush"></i>
+                    <span>呼吸气泡效果</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="bubble-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
         <div class="main-content">
             <div class="timer-section">
                 <div class="timer-display">
-                    <svg class="progress-ring" id="progress-ring">
-                        <circle class="progress-ring-circle" stroke="url(#gradient)" stroke-width="8" fill="transparent" r="150" cx="160" cy="160"/>
+                    <svg class="progress-ring" id="progress-ring" viewBox="0 0 320 320">
+                        <defs>
+                            <linearGradient id="gradientFocus" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#64ffda;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#00bcd4;stop-opacity:1" />
+                            </linearGradient>
+                             <linearGradient id="gradientShortBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#2196f3;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#64b5f6;stop-opacity:1" />
+                            </linearGradient>
+                             <linearGradient id="gradientLongBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#9c27b0;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#ba68c8;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="progress-ring-circle" stroke="url(#gradientFocus)" stroke-width="8" fill="transparent" r="150" cx="160" cy="160"/>
                     </svg>
                     <div class="timer-content">
                         <div class="timer-mode" id="timer-mode">专注时间</div>
                         <div class="timer-time" id="timer">25:00</div>
+                        <div class="breathing-bubble" id="breathing-bubble"></div>
                         <div class="timer-label" id="timer-label">开始专注工作</div>
                     </div>
                 </div>
@@ -597,44 +767,27 @@
                     </div>
                 </div>
                 
-                <div class="card settings">
-                    <h3 class="card-title"><i class="fas fa-cog"></i> 设置</h3>
-                    <div class="setting-item">
-                        <div class="setting-label">
-                            <i class="fas fa-volume-up"></i>
-                            <span>提示音</span>
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-history"></i> 专注历史</h3>
+                    <div class="suggestion-list" id="history-list">
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">⏱️</div>
+                            <div class="suggestion-text">今天：<span id="today-focus-count">0</span>次专注, 共 <span id="today-focus-minutes">0</span>分钟</div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="sound-toggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label">
-                            <i class="fas fa-bell"></i>
-                            <span>结束通知</span>
+                         <div class="suggestion-item">
+                            <div class="suggestion-icon">📅</div>
+                            <div class="suggestion-text">本周：<span id="week-focus-count">0</span>次专注, 共 <span id="week-focus-minutes">0</span>分钟</div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="notification-toggle" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-label">
-                            <i class="fas fa-vibrate"></i>
-                            <span>震动提醒</span>
+                         <div class="suggestion-item">
+                            <div class="suggestion-icon">🏆</div>
+                            <div class="suggestion-text">最长专注：<span id="max-focus-duration">0</span>分钟</div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="vibration-toggle">
-                            <span class="slider"></span>
-                        </label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 通知 -->
     <div class="notification" id="notification">
         <div class="notification-icon">
             <i class="fas fa-bell"></i>
@@ -642,28 +795,36 @@
         <div class="notification-text" id="notification-text">专注时间结束！该休息一下了。</div>
     </div>
     
-    <!-- 音频 -->
-    <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
-    <audio id="end-sound" loop>
+    <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
+    <audio id="end-sound" loop preload="auto">
         <source src="https://assets.mixkit.co/music/preview/mixkit-grocery-lite-1263.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 状态管理
+        'use strict';
+
+        // State Management
         const state = {
             mode: 'focus', // focus, short-break, long-break
             running: false,
-            timeLeft: 25 * 60, // 秒
+            timeLeft: 25 * 60, // seconds
             focusTime: 25 * 60,
             shortBreakTime: 5 * 60,
             longBreakTime: 15 * 60,
             interval: null,
             focusCount: 0,
             breakCount: 0,
-            longBreakCount: 0
+            longBreakCount: 0,
+            bubbleEnabled: document.getElementById('bubble-toggle').checked, // Initialize from checkbox
+            // For history (can be expanded with localStorage)
+            todayFocusSessions: 0,
+            todayFocusMinutes: 0,
+            weekFocusSessions: 0, // Needs more logic for actual week tracking
+            weekFocusMinutes: 0,
+            maxFocusDuration: 0,
         };
 
-        // DOM元素
+        // DOM Elements
         const elements = {
             timer: document.getElementById('timer'),
             timerMode: document.getElementById('timer-mode'),
@@ -671,23 +832,35 @@
             startBtn: document.getElementById('start-btn'),
             pauseBtn: document.getElementById('pause-btn'),
             skipBtn: document.getElementById('skip-btn'),
-            focusCount: document.getElementById('focus-count'),
-            breakCount: document.getElementById('break-count'),
-            longBreakCount: document.getElementById('long-break-count'),
+            focusCountDisplay: document.getElementById('focus-count'),
+            breakCountDisplay: document.getElementById('break-count'),
+            longBreakCountDisplay: document.getElementById('long-break-count'),
             progressCircle: document.querySelector('.progress-ring-circle'),
+            progressRingSvg: document.getElementById('progress-ring'), // For viewBox if needed
             notification: document.getElementById('notification'),
             notificationText: document.getElementById('notification-text'),
             alarmSound: document.getElementById('alarm-sound'),
             endSound: document.getElementById('end-sound'),
             soundToggle: document.getElementById('sound-toggle'),
             notificationToggle: document.getElementById('notification-toggle'),
-            vibrationToggle: document.getElementById('vibration-toggle')
+            vibrationToggle: document.getElementById('vibration-toggle'),
+            bubbleToggle: document.getElementById('bubble-toggle'),
+            breathingBubble: document.getElementById('breathing-bubble'),
+            settingsToggle: document.getElementById('settings-toggle'),
+            settingsPanel: document.getElementById('settings-panel'),
+            // History display elements
+            todayFocusCountDisplay: document.getElementById('today-focus-count'),
+            todayFocusMinutesDisplay: document.getElementById('today-focus-minutes'),
+            weekFocusCountDisplay: document.getElementById('week-focus-count'),
+            weekFocusMinutesDisplay: document.getElementById('week-focus-minutes'),
+            maxFocusDurationDisplay: document.getElementById('max-focus-duration'),
         };
 
-        // 创建背景粒子
+        // Create Background Particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 100;
+            if (!particlesContainer) return;
+            const particleCount = 80; // Reduced slightly for potentially better performance
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -696,15 +869,16 @@
                 particle.style.top = Math.random() * 100 + '%';
                 particle.style.animationDelay = Math.random() * 8 + 's';
                 particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                particle.style.width = (Math.random() * 3 + 1) + 'px';
-                particle.style.height = particle.style.width;
+                const size = (Math.random() * 2 + 1) + 'px'; // Adjusted size range
+                particle.style.width = size;
+                particle.style.height = size;
                 particlesContainer.appendChild(particle);
             }
         }
 
-        // 更新进度环
+        // Update Progress Ring
         function updateProgressRing() {
-            const radius = 150;
+            const radius = parseFloat(elements.progressCircle.getAttribute('r'));
             const circumference = 2 * Math.PI * radius;
             let timeTotal;
             
@@ -712,122 +886,143 @@
                 case 'focus': timeTotal = state.focusTime; break;
                 case 'short-break': timeTotal = state.shortBreakTime; break;
                 case 'long-break': timeTotal = state.longBreakTime; break;
+                default: timeTotal = state.focusTime;
             }
             
             const offset = circumference - (state.timeLeft / timeTotal) * circumference;
             elements.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-            elements.progressCircle.style.strokeDashoffset = offset;
+            elements.progressCircle.style.strokeDashoffset = Math.max(0, offset); // Ensure offset doesn't go negative
         }
 
-        // 格式化时间
+        // Format Time
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = seconds % 60;
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // 更新计时器显示
+        // Update Timer Display
         function updateTimerDisplay() {
             elements.timer.textContent = formatTime(state.timeLeft);
+            document.title = `${formatTime(state.timeLeft)} - ${elements.timerMode.textContent} | 量子番茄钟`;
             updateProgressRing();
         }
 
-        // 设置模式
+        // Set Mode
         function setMode(mode) {
             state.mode = mode;
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
             });
             
-            document.body.className = `${mode}-mode`;
+            // Remove previous mode classes and add current one
+            document.body.classList.remove('focus-mode', 'short-break-mode', 'long-break-mode');
+            document.body.classList.add(`${mode}-mode`);
             
+            let currentGradientUrl;
             switch(mode) {
                 case 'focus':
                     state.timeLeft = state.focusTime;
                     elements.timerMode.textContent = '专注时间';
                     elements.timerLabel.textContent = '开始专注工作';
+                    currentGradientUrl = 'url(#gradientFocus)';
                     break;
                 case 'short-break':
                     state.timeLeft = state.shortBreakTime;
                     elements.timerMode.textContent = '短时休息';
                     elements.timerLabel.textContent = '放松一下，休息5分钟';
+                    currentGradientUrl = 'url(#gradientShortBreak)';
                     break;
                 case 'long-break':
                     state.timeLeft = state.longBreakTime;
                     elements.timerMode.textContent = '长时休息';
                     elements.timerLabel.textContent = '好好放松，休息15分钟';
+                    currentGradientUrl = 'url(#gradientLongBreak)';
                     break;
+                default:
+                    currentGradientUrl = 'url(#gradientFocus)';
             }
-            
+            elements.progressCircle.setAttribute('stroke', currentGradientUrl);
             updateTimerDisplay();
         }
 
-        // 开始计时
+        // Start Timer
         function startTimer() {
+            if (state.timeLeft <= 0) resetTimer(); // If timer ended, reset before starting
             if (state.running) return;
             
             state.running = true;
-            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>';
+            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>'; // Change to reset icon/text
+            elements.pauseBtn.disabled = false;
             
             state.interval = setInterval(() => {
                 state.timeLeft--;
                 updateTimerDisplay();
                 
-                if (state.timeLeft <= 0) {
+                if (state.timeLeft < 0) { // Use < 0 to ensure 00:00 is displayed
                     clearInterval(state.interval);
+                    state.timeLeft = 0; // Ensure it doesn't go negative in display
+                    updateTimerDisplay(); // Show 00:00
                     timerComplete();
                 }
             }, 1000);
         }
 
-        // 暂停计时
+        // Pause Timer
         function pauseTimer() {
             if (!state.running) return;
             
             clearInterval(state.interval);
             state.running = false;
             elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>继续</span>';
+            elements.pauseBtn.disabled = true;
         }
 
-        // 重置计时
+        // Reset Timer
         function resetTimer() {
             clearInterval(state.interval);
             state.running = false;
             
-            switch(state.mode) {
-                case 'focus': state.timeLeft = state.focusTime; break;
-                case 'short-break': state.timeLeft = state.shortBreakTime; break;
-                case 'long-break': state.timeLeft = state.longBreakTime; break;
-            }
+            // Reset timeLeft based on the current mode
+            setMode(state.mode); // This will reset timeLeft and update display
             
             elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
-            updateTimerDisplay();
-            elements.endSound.pause();
-            elements.endSound.currentTime = 0;
+            elements.pauseBtn.disabled = false; // Or true, depending on desired initial state
+            if (elements.endSound.played) {
+                 elements.endSound.pause();
+                 elements.endSound.currentTime = 0;
+            }
+            updateTimerDisplay(); // Ensure display is correct after reset
+        }
+        
+        function updateHistoryStats() {
+            elements.todayFocusCountDisplay.textContent = state.todayFocusSessions;
+            elements.todayFocusMinutesDisplay.textContent = state.todayFocusMinutes;
+            // For week and max, you'd need more robust tracking, potentially with localStorage
+            // elements.weekFocusCountDisplay.textContent = state.weekFocusSessions;
+            // elements.weekFocusMinutesDisplay.textContent = state.weekFocusMinutes;
+            // elements.maxFocusDurationDisplay.textContent = state.maxFocusDuration;
         }
 
-        // 计时完成
+
+        // Timer Complete
         function timerComplete() {
             state.running = false;
             
-            // 播放提示音
             if (elements.soundToggle.checked) {
-                elements.alarmSound.play();
-                elements.endSound.play();
+                elements.alarmSound.play().catch(e => console.warn("Audio play failed:", e));
+                elements.endSound.play().catch(e => console.warn("Audio play failed:", e));
                 
-                // 20秒后停止音乐
                 setTimeout(() => {
                     elements.endSound.pause();
                     elements.endSound.currentTime = 0;
                 }, 20000);
             }
             
-            // 震动提醒
             if (elements.vibrationToggle.checked && navigator.vibrate) {
                 navigator.vibrate([200, 100, 200]);
             }
             
-            // 显示通知
             if (elements.notificationToggle.checked) {
                 let message = '';
                 if (state.mode === 'focus') {
@@ -838,36 +1033,48 @@
                 showNotification(message);
             }
             
-            // 更新计数
             if (state.mode === 'focus') {
                 state.focusCount++;
-                elements.focusCount.textContent = state.focusCount;
+                elements.focusCountDisplay.textContent = state.focusCount;
                 
-                // 每4个专注周期后切换到长休息
-                if (state.focusCount % 4 === 0) {
+                state.todayFocusSessions++;
+                state.todayFocusMinutes += Math.floor(state.focusTime / 60);
+                // Update max focus if current focusTime is longer (assuming focusTime can change)
+                // if (state.focusTime / 60 > state.maxFocusDuration) {
+                //    state.maxFocusDuration = state.focusTime / 60;
+                // }
+                updateHistoryStats();
+
+
+                if (state.focusCount > 0 && state.focusCount % 4 === 0) {
                     setMode('long-break');
                 } else {
                     setMode('short-break');
                 }
             } else if (state.mode === 'short-break') {
                 state.breakCount++;
-                elements.breakCount.textContent = state.breakCount;
+                elements.breakCountDisplay.textContent = state.breakCount;
                 setMode('focus');
             } else if (state.mode === 'long-break') {
                 state.longBreakCount++;
-                elements.longBreakCount.textContent = state.longBreakCount;
+                elements.longBreakCountDisplay.textContent = state.longBreakCount;
                 setMode('focus');
             }
             
-            resetTimer();
+            // Don't auto-reset, let user decide or auto-start next based on preference (not implemented)
+            // resetTimer(); // Or, prompt to start next timer
+            elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>'; // Ready for next start
         }
 
-        // 跳过当前计时
+        // Skip Current Timer
         function skipTimer() {
-            timerComplete();
+            clearInterval(state.interval); // Stop current interval
+            state.timeLeft = 0; // Set time to 0 to trigger completion logic
+            updateTimerDisplay(); // Update display to 00:00
+            timerComplete(); // Call the completion logic
         }
 
-        // 显示通知
+        // Show Notification
         function showNotification(text) {
             elements.notificationText.textContent = text;
             elements.notification.classList.add('show');
@@ -877,24 +1084,31 @@
             }, 5000);
         }
 
-        // 初始化
+        // Toggle Breathing Bubble Effect
+        function toggleBubbleEffect() {
+            elements.breathingBubble.style.display = state.bubbleEnabled ? 'block' : 'none';
+        }
+
+        // Initialize
         function init() {
             createParticles();
-            updateTimerDisplay();
+            setMode('focus'); // Set initial mode and update display
             
-            // 设置模式按钮事件
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     setMode(btn.dataset.mode);
-                    resetTimer();
+                    resetTimer(); // Reset timer when mode changes
                 });
             });
             
-            // 控制按钮事件
             elements.startBtn.addEventListener('click', () => {
-                if (state.running) {
-                    resetTimer();
-                } else {
+                // If start button says "重置" (Reset), then reset. Otherwise, start/resume.
+                if (elements.startBtn.textContent.includes('重置') || elements.startBtn.textContent.includes('Reset')) {
+                     resetTimer();
+                } else if (state.running) { // This case should ideally not happen if button text is managed well
+                    pauseTimer(); 
+                }
+                else {
                     startTimer();
                 }
             });
@@ -902,11 +1116,30 @@
             elements.pauseBtn.addEventListener('click', pauseTimer);
             elements.skipBtn.addEventListener('click', skipTimer);
             
-            // 设置默认模式
-            setMode('focus');
+            elements.bubbleToggle.addEventListener('change', () => {
+                state.bubbleEnabled = elements.bubbleToggle.checked;
+                toggleBubbleEffect();
+            });
+            
+            elements.settingsToggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent this click from being caught by the document listener immediately
+                elements.settingsPanel.classList.toggle('show');
+            });
+            
+            // Corrected: Click outside to close settings panel
+            document.addEventListener('click', (e) => {
+                if (elements.settingsPanel.classList.contains('show') &&
+                    !elements.settingsPanel.contains(e.target) &&
+                    !elements.settingsToggle.contains(e.target)) {
+                    elements.settingsPanel.classList.remove('show');
+                }
+            });
+            
+            toggleBubbleEffect(); // Initialize bubble visibility based on state.bubbleEnabled
+            updateHistoryStats(); // Initialize history display
+            elements.pauseBtn.disabled = true; // Pause initially disabled
         }
 
-        // 页面加载时初始化
         window.addEventListener('load', init);
     </script>
 </body>
