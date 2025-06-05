@@ -111,7 +111,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 101; /* Ensure it's above panel when panel might overlap slightly before animating */
+            z-index: 101;
         }
 
         .settings-toggle:hover {
@@ -221,24 +221,24 @@
 
         .breathing-bubble {
             position: absolute;
-            width: 220px; /* 略微增大尺寸 */
-            height: 220px; /* 略微增大尺寸 */
-            background: rgba(100, 255, 218, 0.25); /* 增加一点基础不透明度 */
+            width: 220px;
+            height: 220px;
+            background: rgba(100, 255, 218, 0.25);
             border-radius: 50%;
-            filter: blur(15px); /* 稍微减少模糊，使其更清晰一些 */
+            filter: blur(15px);
             z-index: 1;
             animation: breathe 3s ease-in-out infinite;
-            display: none; /* Initially hidden, JS will control based on toggle */
+            display: none;
         }
 
         @keyframes breathe {
             0%, 100% {
-                transform: scale(0.85); /* 增加最小缩放 */
-                opacity: 0.4;  /* 增加最小不透明度 */
+                transform: scale(0.85);
+                opacity: 0.4;
             }
             50% {
-                transform: scale(1.25); /* 增加最大缩放 */
-                opacity: 0.75; /* 增加最大不透明度 */
+                transform: scale(1.25);
+                opacity: 0.75;
             }
         }
 
@@ -319,7 +319,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
-            color: #a0a0a0; /* Default color for inactive mode buttons */
+            color: #a0a0a0;
         }
         .mode-btn.active {
             background: linear-gradient(45deg, #2196f3, #64ffda);
@@ -330,7 +330,6 @@
             color: #ffffff;
             background: rgba(100, 255, 218, 0.1);
         }
-
 
         .suggestions-section {
             width: 300px;
@@ -408,28 +407,27 @@
         /* 设置面板 */
         .settings-panel {
             position: absolute;
-            top: 90px; /* Adjusted if header height changes */
+            top: 90px;
             left: 20px;
-            background: rgba(15, 23, 42, 0.95); /* Slightly darker/more opaque for better readability */
+            background: rgba(15, 23, 42, 0.95);
             border: 1px solid rgba(100, 255, 218, 0.3);
             border-radius: 20px;
             padding: 25px;
             backdrop-filter: blur(10px);
-            width: 300px;
+            width: 320px;
             z-index: 100;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(-20px) translateX(-100%); /* Initial off-screen */
+            transform: translateY(-20px) translateX(-100%);
             opacity: 0;
             pointer-events: none;
-            transition: transform 0.4s ease, opacity 0.4s ease; /* Smoother transition */
+            transition: transform 0.4s ease, opacity 0.4s ease;
         }
 
         .settings-panel.show {
-            transform: translateY(0) translateX(0); /* Slide in */
+            transform: translateY(0) translateX(0);
             opacity: 1;
             pointer-events: all;
         }
-
 
         .setting-item {
             display: flex;
@@ -446,6 +444,48 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex: 1;
+        }
+
+        .setting-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setting-input input[type="range"] {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .setting-input input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+        }
+
+        .setting-input input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #64ffda;
+            cursor: pointer;
+            border: none;
+        }
+
+        .setting-input .value-display {
+            min-width: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #64ffda;
         }
 
         .switch {
@@ -503,7 +543,7 @@
             border-radius: 15px;
             padding: 15px 25px;
             backdrop-filter: blur(10px);
-            transform: translateX(calc(100% + 30px)); /* Start off-screen */
+            transform: translateX(calc(100% + 30px));
             transition: transform 0.4s ease;
             z-index: 1000;
             display: flex;
@@ -529,7 +569,6 @@
         .short-break-mode .timer-mode { color: #2196f3; }
         .long-break-mode .timer-mode { color: #9c27b0; }
 
-
         @media (max-width: 900px) {
             .main-content {
                 flex-direction: column;
@@ -537,7 +576,7 @@
             
             .suggestions-section {
                 width: 100%;
-                margin-top: 20px; /* Add some space when stacked */
+                margin-top: 20px;
             }
             
             .timer-display {
@@ -548,7 +587,7 @@
             header {
                 flex-direction: column;
                 gap: 20px;
-                align-items: stretch; /* Make items stretch */
+                align-items: stretch;
             }
 
             .header-left {
@@ -556,7 +595,7 @@
                 justify-content: space-between;
             }
             .stats {
-                justify-content: space-around; /* Distribute stats better */
+                justify-content: space-around;
             }
         }
 
@@ -573,7 +612,7 @@
             .stats {
                 width: 100%;
                 justify-content: space-around;
-                padding: 10px 15px; /* Slightly reduce padding */
+                padding: 10px 15px;
             }
              .stat-value { font-size: 1.5rem; }
              .stat-label { font-size: 0.8rem; }
@@ -581,28 +620,28 @@
             .controls {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 10px; /* Reduce gap for wrapped buttons */
+                gap: 10px;
             }
             
             .btn {
                 padding: 10px 20px;
-                font-size: 0.9rem; /* Slightly smaller buttons */
+                font-size: 0.9rem;
             }
 
             .mode-selector {
-                flex-wrap: wrap; /* Allow mode buttons to wrap */
+                flex-wrap: wrap;
                 justify-content: center;
             }
             .mode-btn {
-                padding: 10px 15px; /* Adjust padding for smaller screens */
-                margin: 5px; /* Add margin for wrapped buttons */
+                padding: 10px 15px;
+                margin: 5px;
             }
 
             .settings-panel {
-                width: calc(100% - 40px); /* Full width minus padding */
+                width: calc(100% - 40px);
                 left: 20px;
                 right: 20px;
-                top: 70px; /* Adjust if header gets smaller */
+                top: 70px;
             }
             .notification {
                 width: calc(100% - 40px);
@@ -687,6 +726,26 @@
                     <input type="checkbox" id="bubble-toggle" checked>
                     <span class="slider"></span>
                 </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-music"></i>
+                    <span>专注结束音乐延迟</span>
+                </div>
+                <div class="setting-input">
+                    <input type="range" id="focus-music-delay" min="0" max="30" value="10">
+                    <div class="value-display" id="focus-music-delay-value">10s</div>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <i class="fas fa-spa"></i>
+                    <span>休息结束前舒缓音乐</span>
+                </div>
+                <div class="setting-input">
+                    <input type="range" id="break-music-delay" min="0" max="30" value="10">
+                    <div class="value-display" id="break-music-delay-value">10s</div>
+                </div>
             </div>
         </div>
         
@@ -796,8 +855,11 @@
     </div>
     
     <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
-    <audio id="end-sound" loop preload="auto">
+    <audio id="focus-end-music" loop preload="auto">
         <source src="https://assets.mixkit.co/music/preview/mixkit-grocery-lite-1263.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="break-end-music" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-relaxing-piano-music-2863.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -815,11 +877,17 @@
             focusCount: 0,
             breakCount: 0,
             longBreakCount: 0,
-            bubbleEnabled: document.getElementById('bubble-toggle').checked, // Initialize from checkbox
+            bubbleEnabled: true, // Initialize with default value
+            // Music delay settings (in seconds)
+            focusMusicDelay: 10,
+            breakMusicDelay: 10,
+            // Music timeout IDs for clearing
+            focusMusicTimeout: null,
+            breakMusicTimeout: null,
             // For history (can be expanded with localStorage)
             todayFocusSessions: 0,
             todayFocusMinutes: 0,
-            weekFocusSessions: 0, // Needs more logic for actual week tracking
+            weekFocusSessions: 0,
             weekFocusMinutes: 0,
             maxFocusDuration: 0,
         };
@@ -836,11 +904,12 @@
             breakCountDisplay: document.getElementById('break-count'),
             longBreakCountDisplay: document.getElementById('long-break-count'),
             progressCircle: document.querySelector('.progress-ring-circle'),
-            progressRingSvg: document.getElementById('progress-ring'), // For viewBox if needed
+            progressRingSvg: document.getElementById('progress-ring'),
             notification: document.getElementById('notification'),
             notificationText: document.getElementById('notification-text'),
             alarmSound: document.getElementById('alarm-sound'),
-            endSound: document.getElementById('end-sound'),
+            focusEndMusic: document.getElementById('focus-end-music'),
+            breakEndMusic: document.getElementById('break-end-music'),
             soundToggle: document.getElementById('sound-toggle'),
             notificationToggle: document.getElementById('notification-toggle'),
             vibrationToggle: document.getElementById('vibration-toggle'),
@@ -848,6 +917,11 @@
             breathingBubble: document.getElementById('breathing-bubble'),
             settingsToggle: document.getElementById('settings-toggle'),
             settingsPanel: document.getElementById('settings-panel'),
+            // Music delay controls
+            focusMusicDelaySlider: document.getElementById('focus-music-delay'),
+            focusMusicDelayValue: document.getElementById('focus-music-delay-value'),
+            breakMusicDelaySlider: document.getElementById('break-music-delay'),
+            breakMusicDelayValue: document.getElementById('break-music-delay-value'),
             // History display elements
             todayFocusCountDisplay: document.getElementById('today-focus-count'),
             todayFocusMinutesDisplay: document.getElementById('today-focus-minutes'),
@@ -860,7 +934,7 @@
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             if (!particlesContainer) return;
-            const particleCount = 80; // Reduced slightly for potentially better performance
+            const particleCount = 80;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -869,7 +943,7 @@
                 particle.style.top = Math.random() * 100 + '%';
                 particle.style.animationDelay = Math.random() * 8 + 's';
                 particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                const size = (Math.random() * 2 + 1) + 'px'; // Adjusted size range
+                const size = (Math.random() * 2 + 1) + 'px';
                 particle.style.width = size;
                 particle.style.height = size;
                 particlesContainer.appendChild(particle);
@@ -891,7 +965,7 @@
             
             const offset = circumference - (state.timeLeft / timeTotal) * circumference;
             elements.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-            elements.progressCircle.style.strokeDashoffset = Math.max(0, offset); // Ensure offset doesn't go negative
+            elements.progressCircle.style.strokeDashoffset = Math.max(0, offset);
         }
 
         // Format Time
@@ -908,8 +982,67 @@
             updateProgressRing();
         }
 
+        // Clear Music Timeouts
+        function clearMusicTimeouts() {
+            if (state.focusMusicTimeout) {
+                clearTimeout(state.focusMusicTimeout);
+                state.focusMusicTimeout = null;
+            }
+            if (state.breakMusicTimeout) {
+                clearTimeout(state.breakMusicTimeout);
+                state.breakMusicTimeout = null;
+            }
+        }
+
+        // Stop All Music
+        function stopAllMusic() {
+            elements.focusEndMusic.pause();
+            elements.focusEndMusic.currentTime = 0;
+            elements.breakEndMusic.pause();
+            elements.breakEndMusic.currentTime = 0;
+        }
+
+        // Schedule Focus End Music
+        function scheduleFocusEndMusic() {
+            if (state.mode !== 'focus' || !elements.soundToggle.checked) return;
+            
+            const delayMs = state.focusMusicDelay * 1000;
+            state.focusMusicTimeout = setTimeout(() => {
+                elements.focusEndMusic.play().catch(e => console.warn("Focus end music play failed:", e));
+                
+                // Stop music after 20 seconds
+                setTimeout(() => {
+                    elements.focusEndMusic.pause();
+                    elements.focusEndMusic.currentTime = 0;
+                }, 20000);
+            }, delayMs);
+        }
+
+        // Schedule Break End Music (before break ends)
+        function scheduleBreakEndMusic() {
+            if (state.mode === 'focus' || !elements.soundToggle.checked) return;
+            
+            const timeBeforeEnd = state.breakMusicDelay;
+            const triggerTime = state.timeLeft - timeBeforeEnd;
+            
+            if (triggerTime <= 0) {
+                // If we're already within the trigger time, play immediately
+                elements.breakEndMusic.play().catch(e => console.warn("Break end music play failed:", e));
+                return;
+            }
+            
+            const delayMs = triggerTime * 1000;
+            state.breakMusicTimeout = setTimeout(() => {
+                elements.breakEndMusic.play().catch(e => console.warn("Break end music play failed:", e));
+            }, delayMs);
+        }
+
         // Set Mode
         function setMode(mode) {
+            // Clear any existing music timeouts
+            clearMusicTimeouts();
+            stopAllMusic();
+            
             state.mode = mode;
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.mode === mode);
@@ -948,21 +1081,28 @@
 
         // Start Timer
         function startTimer() {
-            if (state.timeLeft <= 0) resetTimer(); // If timer ended, reset before starting
+            if (state.timeLeft <= 0) resetTimer();
             if (state.running) return;
             
             state.running = true;
-            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>'; // Change to reset icon/text
+            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>';
             elements.pauseBtn.disabled = false;
+            
+            // Schedule music based on current mode
+            if (state.mode === 'focus') {
+                scheduleFocusEndMusic();
+            } else {
+                scheduleBreakEndMusic();
+            }
             
             state.interval = setInterval(() => {
                 state.timeLeft--;
                 updateTimerDisplay();
                 
-                if (state.timeLeft < 0) { // Use < 0 to ensure 00:00 is displayed
+                if (state.timeLeft < 0) {
                     clearInterval(state.interval);
-                    state.timeLeft = 0; // Ensure it doesn't go negative in display
-                    updateTimerDisplay(); // Show 00:00
+                    state.timeLeft = 0;
+                    updateTimerDisplay();
                     timerComplete();
                 }
             }, 1000);
@@ -973,6 +1113,8 @@
             if (!state.running) return;
             
             clearInterval(state.interval);
+            clearMusicTimeouts();
+            stopAllMusic();
             state.running = false;
             elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>继续</span>';
             elements.pauseBtn.disabled = true;
@@ -981,42 +1123,29 @@
         // Reset Timer
         function resetTimer() {
             clearInterval(state.interval);
+            clearMusicTimeouts();
+            stopAllMusic();
             state.running = false;
             
-            // Reset timeLeft based on the current mode
-            setMode(state.mode); // This will reset timeLeft and update display
+            setMode(state.mode);
             
             elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
-            elements.pauseBtn.disabled = false; // Or true, depending on desired initial state
-            if (elements.endSound.played) {
-                 elements.endSound.pause();
-                 elements.endSound.currentTime = 0;
-            }
-            updateTimerDisplay(); // Ensure display is correct after reset
+            elements.pauseBtn.disabled = false;
+            updateTimerDisplay();
         }
         
         function updateHistoryStats() {
             elements.todayFocusCountDisplay.textContent = state.todayFocusSessions;
             elements.todayFocusMinutesDisplay.textContent = state.todayFocusMinutes;
-            // For week and max, you'd need more robust tracking, potentially with localStorage
-            // elements.weekFocusCountDisplay.textContent = state.weekFocusSessions;
-            // elements.weekFocusMinutesDisplay.textContent = state.weekFocusMinutes;
-            // elements.maxFocusDurationDisplay.textContent = state.maxFocusDuration;
         }
-
 
         // Timer Complete
         function timerComplete() {
             state.running = false;
+            clearMusicTimeouts();
             
             if (elements.soundToggle.checked) {
                 elements.alarmSound.play().catch(e => console.warn("Audio play failed:", e));
-                elements.endSound.play().catch(e => console.warn("Audio play failed:", e));
-                
-                setTimeout(() => {
-                    elements.endSound.pause();
-                    elements.endSound.currentTime = 0;
-                }, 20000);
             }
             
             if (elements.vibrationToggle.checked && navigator.vibrate) {
@@ -1039,12 +1168,7 @@
                 
                 state.todayFocusSessions++;
                 state.todayFocusMinutes += Math.floor(state.focusTime / 60);
-                // Update max focus if current focusTime is longer (assuming focusTime can change)
-                // if (state.focusTime / 60 > state.maxFocusDuration) {
-                //    state.maxFocusDuration = state.focusTime / 60;
-                // }
                 updateHistoryStats();
-
 
                 if (state.focusCount > 0 && state.focusCount % 4 === 0) {
                     setMode('long-break');
@@ -1061,17 +1185,17 @@
                 setMode('focus');
             }
             
-            // Don't auto-reset, let user decide or auto-start next based on preference (not implemented)
-            // resetTimer(); // Or, prompt to start next timer
-            elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>'; // Ready for next start
+            elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
         }
 
         // Skip Current Timer
         function skipTimer() {
-            clearInterval(state.interval); // Stop current interval
-            state.timeLeft = 0; // Set time to 0 to trigger completion logic
-            updateTimerDisplay(); // Update display to 00:00
-            timerComplete(); // Call the completion logic
+            clearInterval(state.interval);
+            clearMusicTimeouts();
+            stopAllMusic();
+            state.timeLeft = 0;
+            updateTimerDisplay();
+            timerComplete();
         }
 
         // Show Notification
@@ -1089,23 +1213,36 @@
             elements.breathingBubble.style.display = state.bubbleEnabled ? 'block' : 'none';
         }
 
+        // Update Music Delay Display
+        function updateMusicDelayDisplays() {
+            elements.focusMusicDelayValue.textContent = state.focusMusicDelay + 's';
+            elements.breakMusicDelayValue.textContent = state.breakMusicDelay + 's';
+        }
+
         // Initialize
         function init() {
             createParticles();
-            setMode('focus'); // Set initial mode and update display
+            setMode('focus');
+            
+            // Initialize bubble toggle state
+            state.bubbleEnabled = elements.bubbleToggle.checked;
+            
+            // Initialize music delay sliders
+            elements.focusMusicDelaySlider.value = state.focusMusicDelay;
+            elements.breakMusicDelaySlider.value = state.breakMusicDelay;
+            updateMusicDelayDisplays();
             
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     setMode(btn.dataset.mode);
-                    resetTimer(); // Reset timer when mode changes
+                    resetTimer();
                 });
             });
             
             elements.startBtn.addEventListener('click', () => {
-                // If start button says "重置" (Reset), then reset. Otherwise, start/resume.
                 if (elements.startBtn.textContent.includes('重置') || elements.startBtn.textContent.includes('Reset')) {
                      resetTimer();
-                } else if (state.running) { // This case should ideally not happen if button text is managed well
+                } else if (state.running) {
                     pauseTimer(); 
                 }
                 else {
@@ -1121,12 +1258,22 @@
                 toggleBubbleEffect();
             });
             
+            // Music delay slider event listeners
+            elements.focusMusicDelaySlider.addEventListener('input', (e) => {
+                state.focusMusicDelay = parseInt(e.target.value);
+                updateMusicDelayDisplays();
+            });
+            
+            elements.breakMusicDelaySlider.addEventListener('input', (e) => {
+                state.breakMusicDelay = parseInt(e.target.value);
+                updateMusicDelayDisplays();
+            });
+            
             elements.settingsToggle.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent this click from being caught by the document listener immediately
+                e.stopPropagation();
                 elements.settingsPanel.classList.toggle('show');
             });
             
-            // Corrected: Click outside to close settings panel
             document.addEventListener('click', (e) => {
                 if (elements.settingsPanel.classList.contains('show') &&
                     !elements.settingsPanel.contains(e.target) &&
@@ -1135,9 +1282,9 @@
                 }
             });
             
-            toggleBubbleEffect(); // Initialize bubble visibility based on state.bubbleEnabled
-            updateHistoryStats(); // Initialize history display
-            elements.pauseBtn.disabled = true; // Pause initially disabled
+            toggleBubbleEffect();
+            updateHistoryStats();
+            elements.pauseBtn.disabled = true;
         }
 
         window.addEventListener('load', init);
