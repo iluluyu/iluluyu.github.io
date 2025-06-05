@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子番茄钟 | 专注与休息</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 背景粒子效果 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 255, 218, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.8), 0 0 20px rgba(100, 255, 218, 0.6);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(20px, -30px) scale(1.5); opacity: 1; }
+        }
+
+        .quantum-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            box-shadow: 0 0 50px rgba(100, 255, 218, 0.2);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #64ffda, #00bcd4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 15px;
+            padding: 15px 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #64ffda;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 40px;
+        }
+
+        .timer-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timer-display {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 40px 0;
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s linear;
+        }
+
+        .timer-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-mode {
+            font-size: 1.8rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .timer-time {
+            font-size: 4rem;
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-label {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #2196f3, #64ffda);
+            color: #0c0c0c;
+            box-shadow: 0 5px 20px rgba(100, 255, 218, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn i {
+            font-size: 1.2rem;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 30px;
+            padding: 5px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .mode-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(45deg, #2196f3, #64ffda);
+            color: #0c0c0c;
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .suggestions-section {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(100, 255, 218, 0.5);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64ffda;
+        }
+
+        .card-title i {
+            font-size: 1.5rem;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateX(5px);
+        }
+
+        .suggestion-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(100, 255, 218, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .suggestion-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .settings {
+            margin-top: 40px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #a0a0a0;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(45deg, #2196f3, #64ffda);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: #0c0c0c;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 15px;
+            padding: 15px 25px;
+            backdrop-filter: blur(10px);
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            color: #64ffda;
+        }
+
+        .focus-mode .progress-ring-circle {
+            stroke: #64ffda;
+        }
+
+        .short-break-mode .progress-ring-circle {
+            stroke: #2196f3;
+        }
+
+        .long-break-mode .progress-ring-circle {
+            stroke: #9c27b0;
+        }
+
+        .focus-mode .timer-mode {
+            color: #64ffda;
+        }
+
+        .short-break-mode .timer-mode {
+            color: #2196f3;
+        }
+
+        .long-break-mode .timer-mode {
+            color: #9c27b0;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .suggestions-section {
+                width: 100%;
+            }
+            
+            .timer-display {
+                width: 280px;
+                height: 280px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timer-display {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .timer-time {
+                font-size: 3rem;
+            }
+            
+            .stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 量子环 -->
+    <div class="quantum-ring" style="width: 800px; height: 800px; top: -400px; right: -400px;"></div>
+    <div class="quantum-ring" style="width: 600px; height: 600px; bottom: -300px; left: -300px;"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-atom"></i>
+                <span>量子番茄钟</span>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="focus-count">0</div>
+                    <div class="stat-label">专注次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="break-count">0</div>
+                    <div class="stat-label">短休次数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="long-break-count">0</div>
+                    <div class="stat-label">长休次数</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="timer-section">
+                <div class="timer-display">
+                    <svg class="progress-ring" id="progress-ring">
+                        <circle class="progress-ring-circle" stroke="url(#gradient)" stroke-width="8" fill="transparent" r="150" cx="160" cy="160"/>
+                    </svg>
+                    <div class="timer-content">
+                        <div class="timer-mode" id="timer-mode">专注时间</div>
+                        <div class="timer-time" id="timer">25:00</div>
+                        <div class="timer-label" id="timer-label">开始专注工作</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="start-btn">
+                        <i class="fas fa-play"></i>
+                        <span>开始</span>
+                    </button>
+                    <button class="btn btn-secondary" id="pause-btn">
+                        <i class="fas fa-pause"></i>
+                        <span>暂停</span>
+                    </button>
+                    <button class="btn btn-secondary" id="skip-btn">
+                        <i class="fas fa-step-forward"></i>
+                        <span>跳过</span>
+                    </button>
+                </div>
+                
+                <div class="mode-selector">
+                    <div class="mode-btn active" data-mode="focus">专注 (25:00)</div>
+                    <div class="mode-btn" data-mode="short-break">短休 (5:00)</div>
+                    <div class="mode-btn" data-mode="long-break">长休 (15:00)</div>
+                </div>
+            </div>
+            
+            <div class="suggestions-section">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-lightbulb"></i> 休息建议</h3>
+                    <div class="suggestion-list">
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">👀</div>
+                            <div class="suggestion-text">远眺窗外，放松眼睛</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">🧘‍♀️</div>
+                            <div class="suggestion-text">深呼吸，放松身心</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">💧</div>
+                            <div class="suggestion-text">喝一杯水，补充水分</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">🤸‍♂️</div>
+                            <div class="suggestion-text">起身活动，伸展筋骨</div>
+                        </div>
+                        <div class="suggestion-item">
+                            <div class="suggestion-icon">🎵</div>
+                            <div class="suggestion-text">听一首轻松的音乐</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card settings">
+                    <h3 class="card-title"><i class="fas fa-cog"></i> 设置</h3>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-volume-up"></i>
+                            <span>提示音</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-bell"></i>
+                            <span>结束通知</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notification-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-vibrate"></i>
+                            <span>震动提醒</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="vibration-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 通知 -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-bell"></i>
+        </div>
+        <div class="notification-text" id="notification-text">专注时间结束！该休息一下了。</div>
+    </div>
+    
+    <!-- 音频 -->
+    <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
+    <audio id="end-sound" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-grocery-lite-1263.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 状态管理
+        const state = {
+            mode: 'focus', // focus, short-break, long-break
+            running: false,
+            timeLeft: 25 * 60, // 秒
+            focusTime: 25 * 60,
+            shortBreakTime: 5 * 60,
+            longBreakTime: 15 * 60,
+            interval: null,
+            focusCount: 0,
+            breakCount: 0,
+            longBreakCount: 0
+        };
+
+        // DOM元素
+        const elements = {
+            timer: document.getElementById('timer'),
+            timerMode: document.getElementById('timer-mode'),
+            timerLabel: document.getElementById('timer-label'),
+            startBtn: document.getElementById('start-btn'),
+            pauseBtn: document.getElementById('pause-btn'),
+            skipBtn: document.getElementById('skip-btn'),
+            focusCount: document.getElementById('focus-count'),
+            breakCount: document.getElementById('break-count'),
+            longBreakCount: document.getElementById('long-break-count'),
+            progressCircle: document.querySelector('.progress-ring-circle'),
+            notification: document.getElementById('notification'),
+            notificationText: document.getElementById('notification-text'),
+            alarmSound: document.getElementById('alarm-sound'),
+            endSound: document.getElementById('end-sound'),
+            soundToggle: document.getElementById('sound-toggle'),
+            notificationToggle: document.getElementById('notification-toggle'),
+            vibrationToggle: document.getElementById('vibration-toggle')
+        };
+
+        // 创建背景粒子
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 更新进度环
+        function updateProgressRing() {
+            const radius = 150;
+            const circumference = 2 * Math.PI * radius;
+            let timeTotal;
+            
+            switch(state.mode) {
+                case 'focus': timeTotal = state.focusTime; break;
+                case 'short-break': timeTotal = state.shortBreakTime; break;
+                case 'long-break': timeTotal = state.longBreakTime; break;
+            }
+            
+            const offset = circumference - (state.timeLeft / timeTotal) * circumference;
+            elements.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+            elements.progressCircle.style.strokeDashoffset = offset;
+        }
+
+        // 格式化时间
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            elements.timer.textContent = formatTime(state.timeLeft);
+            updateProgressRing();
+        }
+
+        // 设置模式
+        function setMode(mode) {
+            state.mode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            document.body.className = `${mode}-mode`;
+            
+            switch(mode) {
+                case 'focus':
+                    state.timeLeft = state.focusTime;
+                    elements.timerMode.textContent = '专注时间';
+                    elements.timerLabel.textContent = '开始专注工作';
+                    break;
+                case 'short-break':
+                    state.timeLeft = state.shortBreakTime;
+                    elements.timerMode.textContent = '短时休息';
+                    elements.timerLabel.textContent = '放松一下，休息5分钟';
+                    break;
+                case 'long-break':
+                    state.timeLeft = state.longBreakTime;
+                    elements.timerMode.textContent = '长时休息';
+                    elements.timerLabel.textContent = '好好放松，休息15分钟';
+                    break;
+            }
+            
+            updateTimerDisplay();
+        }
+
+        // 开始计时
+        function startTimer() {
+            if (state.running) return;
+            
+            state.running = true;
+            elements.startBtn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>';
+            
+            state.interval = setInterval(() => {
+                state.timeLeft--;
+                updateTimerDisplay();
+                
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.interval);
+                    timerComplete();
+                }
+            }, 1000);
+        }
+
+        // 暂停计时
+        function pauseTimer() {
+            if (!state.running) return;
+            
+            clearInterval(state.interval);
+            state.running = false;
+            elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>继续</span>';
+        }
+
+        // 重置计时
+        function resetTimer() {
+            clearInterval(state.interval);
+            state.running = false;
+            
+            switch(state.mode) {
+                case 'focus': state.timeLeft = state.focusTime; break;
+                case 'short-break': state.timeLeft = state.shortBreakTime; break;
+                case 'long-break': state.timeLeft = state.longBreakTime; break;
+            }
+            
+            elements.startBtn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
+            updateTimerDisplay();
+            elements.endSound.pause();
+            elements.endSound.currentTime = 0;
+        }
+
+        // 计时完成
+        function timerComplete() {
+            state.running = false;
+            
+            // 播放提示音
+            if (elements.soundToggle.checked) {
+                elements.alarmSound.play();
+                elements.endSound.play();
+                
+                // 20秒后停止音乐
+                setTimeout(() => {
+                    elements.endSound.pause();
+                    elements.endSound.currentTime = 0;
+                }, 20000);
+            }
+            
+            // 震动提醒
+            if (elements.vibrationToggle.checked && navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+            
+            // 显示通知
+            if (elements.notificationToggle.checked) {
+                let message = '';
+                if (state.mode === 'focus') {
+                    message = '专注时间结束！该休息一下了。';
+                } else {
+                    message = '休息时间结束！该继续专注工作了。';
+                }
+                showNotification(message);
+            }
+            
+            // 更新计数
+            if (state.mode === 'focus') {
+                state.focusCount++;
+                elements.focusCount.textContent = state.focusCount;
+                
+                // 每4个专注周期后切换到长休息
+                if (state.focusCount % 4 === 0) {
+                    setMode('long-break');
+                } else {
+                    setMode('short-break');
+                }
+            } else if (state.mode === 'short-break') {
+                state.breakCount++;
+                elements.breakCount.textContent = state.breakCount;
+                setMode('focus');
+            } else if (state.mode === 'long-break') {
+                state.longBreakCount++;
+                elements.longBreakCount.textContent = state.longBreakCount;
+                setMode('focus');
+            }
+            
+            resetTimer();
+        }
+
+        // 跳过当前计时
+        function skipTimer() {
+            timerComplete();
+        }
+
+        // 显示通知
+        function showNotification(text) {
+            elements.notificationText.textContent = text;
+            elements.notification.classList.add('show');
+            
+            setTimeout(() => {
+                elements.notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // 初始化
+        function init() {
+            createParticles();
+            updateTimerDisplay();
+            
+            // 设置模式按钮事件
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setMode(btn.dataset.mode);
+                    resetTimer();
+                });
+            });
+            
+            // 控制按钮事件
+            elements.startBtn.addEventListener('click', () => {
+                if (state.running) {
+                    resetTimer();
+                } else {
+                    startTimer();
+                }
+            });
+            
+            elements.pauseBtn.addEventListener('click', pauseTimer);
+            elements.skipBtn.addEventListener('click', skipTimer);
+            
+            // 设置默认模式
+            setMode('focus');
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
