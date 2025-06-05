@@ -221,11 +221,11 @@
 
         .breathing-bubble {
             position: absolute;
-            width: 200px;
-            height: 200px;
-            background: rgba(100, 255, 218, 0.1);
+            width: 220px; /* 略微增大尺寸 */
+            height: 220px; /* 略微增大尺寸 */
+            background: rgba(100, 255, 218, 0.25); /* 增加一点基础不透明度 */
             border-radius: 50%;
-            filter: blur(20px);
+            filter: blur(15px); /* 稍微减少模糊，使其更清晰一些 */
             z-index: 1;
             animation: breathe 3s ease-in-out infinite;
             display: none; /* Initially hidden, JS will control based on toggle */
@@ -233,12 +233,12 @@
 
         @keyframes breathe {
             0%, 100% {
-                transform: scale(0.8);
-                opacity: 0.3;
+                transform: scale(0.85); /* 增加最小缩放 */
+                opacity: 0.4;  /* 增加最小不透明度 */
             }
             50% {
-                transform: scale(1.2);
-                opacity: 0.6;
+                transform: scale(1.25); /* 增加最大缩放 */
+                opacity: 0.75; /* 增加最大不透明度 */
             }
         }
 
