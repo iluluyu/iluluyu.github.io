@@ -834,10 +834,6 @@
                             <div class="suggestion-text">今天：<span id="today-focus-count">0</span>次专注, 共 <span id="today-focus-minutes">0</span>分钟</div>
                         </div>
                          <div class="suggestion-item">
-                            <div class="suggestion-icon">📅</div>
-                            <div class="suggestion-text">本周：<span id="week-focus-count">0</span>次专注, 共 <span id="week-focus-minutes">0</span>分钟</div>
-                        </div>
-                         <div class="suggestion-item">
                             <div class="suggestion-icon">🏆</div>
                             <div class="suggestion-text">最长专注：<span id="max-focus-duration">0</span>分钟</div>
                         </div>
@@ -884,12 +880,11 @@
             // Music timeout IDs for clearing
             focusMusicTimeout: null,
             breakMusicTimeout: null,
-            // For history (can be expanded with localStorage)
+            // Daily history tracking
             todayFocusSessions: 0,
             todayFocusMinutes: 0,
-            weekFocusSessions: 0,
-            weekFocusMinutes: 0,
             maxFocusDuration: 0,
+            lastActiveDate: null,
         };
 
         // DOM Elements
@@ -925,12 +920,73 @@
             // History display elements
             todayFocusCountDisplay: document.getElementById('today-focus-count'),
             todayFocusMinutesDisplay: document.getElementById('today-focus-minutes'),
-            weekFocusCountDisplay: document.getElementById('week-focus-count'),
-            weekFocusMinutesDisplay: document.getElementById('week-focus-minutes'),
             maxFocusDurationDisplay: document.getElementById('max-focus-duration'),
         };
 
-        // Create Background Particles
+        // Get today's date string
+        function getTodayString() {
+            return new Date().toDateString();
+        }
+
+        // Check if it's a new day and reset history if needed
+        function checkAndResetDailyHistory() {
+            const today = getTodayString();
+            
+            if (state.lastActiveDate !== today) {
+                // New day detected, reset daily stats
+                state.todayFocusSessions = 0;
+                state.todayFocusMinutes = 0;
+                state.maxFocusDuration = 0;
+                state.lastActiveDate = today;
+                
+                // Save to localStorage
+                saveDailyHistory();
+                updateHistoryStats();
+            }
+        }
+
+        // Save daily history to localStorage
+        function saveDailyHistory() {
+            try {
+                const historyData = {
+                    todayFocusSessions: state.todayFocusSessions,
+                    todayFocusMinutes: state.todayFocusMinutes,
+                    maxFocusDuration: state.maxFocusDuration,
+                    lastActiveDate: state.lastActiveDate
+                };
+                localStorage.setItem('pomodoroHistory', JSON.stringify(historyData));
+            } catch (e) {
+                console.warn('Failed to save history to localStorage:', e);
+            }
+        }
+
+        // Load daily history from localStorage
+        function loadDailyHistory() {
+            try {
+                const saved = localStorage.getItem('pomodoroHistory');
+                if (saved) {
+                    const historyData = JSON.parse(saved);
+                    const today = getTodayString();
+                    
+                    // Only load if it's the same day
+                    if (historyData.lastActiveDate === today) {
+                        state.todayFocusSessions = historyData.todayFocusSessions || 0;
+                        state.todayFocusMinutes = historyData.todayFocusMinutes || 0;
+                        state.maxFocusDuration = historyData.maxFocusDuration || 0;
+                        state.lastActiveDate = historyData.lastActiveDate;
+                    } else {
+                        // Different day, reset everything
+                        state.lastActiveDate = today;
+                        saveDailyHistory();
+                    }
+                } else {
+                    state.lastActiveDate = getTodayString();
+                }
+            } catch (e) {
+                console.warn('Failed to load history from localStorage:', e);
+                state.lastActiveDate = getTodayString();
+            }
+        }
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             if (!particlesContainer) return;
@@ -975,10 +1031,16 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Update Timer Display
+        // Update Timer Display (optimized)
         function updateTimerDisplay() {
-            elements.timer.textContent = formatTime(state.timeLeft);
-            document.title = `${formatTime(state.timeLeft)} - ${elements.timerMode.textContent} | 量子番茄钟`;
+            const timeString = formatTime(state.timeLeft);
+            
+            // Only update if time has actually changed
+            if (elements.timer.textContent !== timeString) {
+                elements.timer.textContent = timeString;
+                document.title = `${timeString} - ${elements.timerMode.textContent} | 量子番茄钟`;
+            }
+            
             updateProgressRing();
         }
 
@@ -1135,8 +1197,12 @@
         }
         
         function updateHistoryStats() {
+            // Check for new day before updating
+            checkAndResetDailyHistory();
+            
             elements.todayFocusCountDisplay.textContent = state.todayFocusSessions;
             elements.todayFocusMinutesDisplay.textContent = state.todayFocusMinutes;
+            elements.maxFocusDurationDisplay.textContent = state.maxFocusDuration;
         }
 
         // Timer Complete
@@ -1166,8 +1232,18 @@
                 state.focusCount++;
                 elements.focusCountDisplay.textContent = state.focusCount;
                 
+                // Update daily history
                 state.todayFocusSessions++;
-                state.todayFocusMinutes += Math.floor(state.focusTime / 60);
+                const sessionMinutes = Math.floor(state.focusTime / 60);
+                state.todayFocusMinutes += sessionMinutes;
+                
+                // Update max focus duration if this session is longer
+                if (sessionMinutes > state.maxFocusDuration) {
+                    state.maxFocusDuration = sessionMinutes;
+                }
+                
+                // Save to localStorage
+                saveDailyHistory();
                 updateHistoryStats();
 
                 if (state.focusCount > 0 && state.focusCount % 4 === 0) {
@@ -1221,6 +1297,9 @@
 
         // Initialize
         function init() {
+            // Load daily history first
+            loadDailyHistory();
+            
             createParticles();
             setMode('focus');
             
@@ -1232,6 +1311,10 @@
             elements.breakMusicDelaySlider.value = state.breakMusicDelay;
             updateMusicDelayDisplays();
             
+            // Use event delegation for better performance
+            document.addEventListener('click', handleDocumentClick);
+            
+            // Mode buttons event listeners
             document.querySelectorAll('.mode-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     setMode(btn.dataset.mode);
@@ -1239,17 +1322,7 @@
                 });
             });
             
-            elements.startBtn.addEventListener('click', () => {
-                if (elements.startBtn.textContent.includes('重置') || elements.startBtn.textContent.includes('Reset')) {
-                     resetTimer();
-                } else if (state.running) {
-                    pauseTimer(); 
-                }
-                else {
-                    startTimer();
-                }
-            });
-            
+            elements.startBtn.addEventListener('click', handleStartButton);
             elements.pauseBtn.addEventListener('click', pauseTimer);
             elements.skipBtn.addEventListener('click', skipTimer);
             
@@ -1258,15 +1331,23 @@
                 toggleBubbleEffect();
             });
             
-            // Music delay slider event listeners
+            // Music delay slider event listeners with throttling
+            let focusDelayTimeout;
             elements.focusMusicDelaySlider.addEventListener('input', (e) => {
-                state.focusMusicDelay = parseInt(e.target.value);
-                updateMusicDelayDisplays();
+                clearTimeout(focusDelayTimeout);
+                focusDelayTimeout = setTimeout(() => {
+                    state.focusMusicDelay = parseInt(e.target.value);
+                    updateMusicDelayDisplays();
+                }, 100);
             });
             
+            let breakDelayTimeout;
             elements.breakMusicDelaySlider.addEventListener('input', (e) => {
-                state.breakMusicDelay = parseInt(e.target.value);
-                updateMusicDelayDisplays();
+                clearTimeout(breakDelayTimeout);
+                breakDelayTimeout = setTimeout(() => {
+                    state.breakMusicDelay = parseInt(e.target.value);
+                    updateMusicDelayDisplays();
+                }, 100);
             });
             
             elements.settingsToggle.addEventListener('click', (e) => {
@@ -1274,17 +1355,31 @@
                 elements.settingsPanel.classList.toggle('show');
             });
             
-            document.addEventListener('click', (e) => {
-                if (elements.settingsPanel.classList.contains('show') &&
-                    !elements.settingsPanel.contains(e.target) &&
-                    !elements.settingsToggle.contains(e.target)) {
-                    elements.settingsPanel.classList.remove('show');
-                }
-            });
-            
             toggleBubbleEffect();
             updateHistoryStats();
             elements.pauseBtn.disabled = true;
+            
+            // Check for new day every hour
+            setInterval(checkAndResetDailyHistory, 3600000); // 1 hour
+        }
+
+        // Optimized event handlers
+        function handleStartButton() {
+            if (elements.startBtn.textContent.includes('重置') || elements.startBtn.textContent.includes('Reset')) {
+                 resetTimer();
+            } else if (state.running) {
+                pauseTimer(); 
+            } else {
+                startTimer();
+            }
+        }
+
+        function handleDocumentClick(e) {
+            if (elements.settingsPanel.classList.contains('show') &&
+                !elements.settingsPanel.contains(e.target) &&
+                !elements.settingsToggle.contains(e.target)) {
+                elements.settingsPanel.classList.remove('show');
+            }
         }
 
         window.addEventListener('load', init);
