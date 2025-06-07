@@ -109,12 +109,12 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
             position: relative;
             z-index: 1;
         }
@@ -123,10 +123,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 30px 40px;
-            margin-bottom: 50px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
             backdrop-filter: blur(25px);
-            border-radius: 30px;
+            border-radius: 20px;
             background: rgba(255, 255, 255, 0.03);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -135,14 +135,14 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 15px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 2rem;
+            gap: 10px;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #00d4ff 0%, #6366f1 50%, #8b5cf6 100%);
             -webkit-background-clip: text;
@@ -153,7 +153,7 @@
         }
 
         .logo i {
-            font-size: 2.5rem;
+            font-size: 2rem;
             background: linear-gradient(135deg, #00d4ff, #6366f1);
             -webkit-background-clip: text;
             background-clip: text;
@@ -289,7 +289,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .timer-mode {
@@ -607,8 +607,9 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .setting-item:last-child {
-            border-bottom: none;
+        .settings-panel h3.card-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
         .setting-label {
@@ -646,8 +647,8 @@
         }
 
         .setting-input input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             background: linear-gradient(135deg, #00d4ff, #6366f1);
             cursor: pointer;
@@ -748,14 +749,14 @@
 
         /* 音乐状态指示器 */
         .music-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: fixed;
+            top: 15px;
+            right: 15px;
             background: rgba(0, 212, 255, 0.1);
-            border-radius: 50px;
-            padding: 8px 16px;
+            border-radius: 40px;
+            padding: 6px 14px;
             backdrop-filter: blur(15px);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #00d4ff;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -793,47 +794,76 @@
 
         .audio-test-content {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
-            padding: 40px;
+            border-radius: 25px;
+            padding: 30px;
             text-align: center;
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .audio-test-content i {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: #00d4ff;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: block;
         }
 
         .audio-test-content p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
+            font-size: 1rem;
+            margin-bottom: 25px;
             color: #e2e8f0;
-            line-height: 1.6;
+            line-height: 1.5;
+        }
+
+        /* 自定义滚动条样式 */
+        .suggestions-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .suggestions-section::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .suggestions-section::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .suggestions-section::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.5);
         }
 
         @media (max-width: 1100px) {
             .main-content {
                 flex-direction: column;
+                gap: 20px;
             }
             
             .suggestions-section {
                 width: 100%;
-                margin-top: 30px;
+                margin-top: 20px;
+                max-height: none;
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+                overflow-x: auto;
+            }
+            
+            .card {
+                min-width: 300px;
             }
             
             .timer-display {
-                width: 300px;
-                height: 300px;
+                width: 250px;
+                height: 250px;
             }
             
             header {
                 flex-direction: column;
-                gap: 25px;
+                gap: 15px;
                 align-items: stretch;
             }
 
@@ -849,37 +879,37 @@
 
         @media (max-width: 640px) {
             .timer-display {
-                width: 260px;
-                height: 260px;
+                width: 220px;
+                height: 220px;
             }
             
             .timer-time {
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
             
             .stats {
                 width: 100%;
                 justify-content: space-around;
-                padding: 15px 20px;
+                padding: 12px 15px;
             }
             
             .stat-value { 
-                font-size: 1.6rem; 
+                font-size: 1.3rem; 
             }
             
             .stat-label { 
-                font-size: 0.85rem; 
+                font-size: 0.75rem; 
             }
             
             .controls {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 15px;
+                gap: 10px;
             }
             
             .btn {
-                padding: 12px 24px;
-                font-size: 1rem;
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
 
             .mode-selector {
@@ -888,22 +918,32 @@
             }
             
             .mode-btn {
-                padding: 12px 20px;
+                padding: 8px 16px;
                 margin: 5px;
+                font-size: 0.85rem;
             }
 
             .settings-panel {
-                width: calc(100% - 40px);
-                left: 20px;
-                right: 20px;
-                top: 100px;
+                width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
+                top: 80px;
             }
             
             .notification {
-                width: calc(100% - 40px);
-                left: 20px;
-                right: 20px;
+                width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
                 justify-content: center;
+            }
+            
+            .suggestions-section {
+                flex-direction: column;
+            }
+            
+            .card {
+                min-width: auto;
+                width: 100%;
             }
         }
     </style>
@@ -912,8 +952,8 @@
     <div class="particles" id="particles"></div>
     <div class="neural-network" id="neural-network"></div>
     
-    <div class="quantum-ring" style="width: 900px; height: 900px; top: -450px; right: -450px;"></div>
-    <div class="quantum-ring" style="width: 700px; height: 700px; bottom: -350px; left: -350px;"></div>
+    <div class="quantum-ring" style="width: 600px; height: 600px; top: -300px; right: -300px;"></div>
+    <div class="quantum-ring" style="width: 500px; height: 500px; bottom: -250px; left: -250px;"></div>
 
     <div class="music-indicator" id="music-indicator">🎵 音乐播放中...</div>
 
@@ -989,21 +1029,21 @@
             <div class="setting-item">
                 <div class="setting-label">
                     <i class="fas fa-music"></i>
-                    <span>专注结束音乐延迟</span>
+                    <span>专注结束音乐时长</span>
                 </div>
                 <div class="setting-input">
-                    <input type="range" id="focus-music-delay" min="0" max="30" value="10">
-                    <div class="value-display" id="focus-music-delay-value">10s</div>
+                    <input type="range" id="focus-music-duration" min="5" max="30" value="10">
+                    <div class="value-display" id="focus-music-duration-value">10s</div>
                 </div>
             </div>
             <div class="setting-item">
                 <div class="setting-label">
                     <i class="fas fa-spa"></i>
-                    <span>休息结束前舒缓音乐</span>
+                    <span>休息结束音乐时长</span>
                 </div>
                 <div class="setting-input">
-                    <input type="range" id="break-music-delay" min="0" max="30" value="10">
-                    <div class="value-display" id="break-music-delay-value">10s</div>
+                    <input type="range" id="break-music-duration" min="5" max="30" value="10">
+                    <div class="value-display" id="break-music-duration-value">10s</div>
                 </div>
             </div>
         </div>
@@ -1011,25 +1051,25 @@
         <div class="main-content">
             <div class="timer-section">
                 <div class="timer-display">
-                    <svg class="progress-ring" id="progress-ring" viewBox="0 0 350 350">
+                    <svg class="progress-ring" id="progress-ring" viewBox="0 0 280 280">
                         <defs>
                             <linearGradient id="gradientFocus" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
                                 <stop offset="50%" style="stop-color:#0ea5e9;stop-opacity:1" />
                                 <stop offset="100%" style="stop-color:#0284c7;stop-opacity:1" />
                             </linearGradient>
-                             <linearGradient id="gradientShortBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="gradientShortBreak" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
                                 <stop offset="50%" style="stop-color:#0284c7;stop-opacity:1" />
                                 <stop offset="100%" style="stop-color:#0369a1;stop-opacity:1" />
                             </linearGradient>
-                             <linearGradient id="gradientLongBreak" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="gradientLongBreak" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
                                 <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
                                 <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
                             </linearGradient>
                         </defs>
-                        <circle class="progress-ring-circle" stroke="url(#gradientFocus)" stroke-width="6" fill="transparent" r="165" cx="175" cy="175"/>
+                        <circle class="progress-ring-circle" stroke="url(#gradientFocus)" stroke-width="6" fill="transparent" r="130" cx="140" cy="140"/>
                     </svg>
                     <div class="timer-content">
                         <div class="timer-mode" id="timer-mode">专注时间</div>
@@ -1047,6 +1087,10 @@
                     <button class="btn btn-secondary" id="pause-btn">
                         <i class="fas fa-pause"></i>
                         <span>暂停</span>
+                    </button>
+                    <button class="btn btn-secondary" id="reset-btn">
+                        <i class="fas fa-redo"></i>
+                        <span>重置</span>
                     </button>
                     <button class="btn btn-secondary" id="skip-btn">
                         <i class="fas fa-step-forward"></i>
@@ -1095,7 +1139,7 @@
                             <div class="suggestion-icon">⏱️</div>
                             <div class="suggestion-text">今天：<span id="today-focus-count">0</span>次专注, 共 <span id="today-focus-minutes">0</span>分钟</div>
                         </div>
-                         <div class="suggestion-item">
+                        <div class="suggestion-item">
                             <div class="suggestion-icon">🏆</div>
                             <div class="suggestion-text">最长专注：<span id="max-focus-duration">0</span>分钟</div>
                         </div>
@@ -1165,7 +1209,7 @@
                 
                 if (isLowEnd) return 30;
                 if (isMobile) return 60;
-                return 80; // 减少从120到80
+                return 80;
             }
 
             handleVisibilityChange() {
@@ -1253,14 +1297,15 @@
             }
         }
 
-        // 音频系统类
+        // 改进的音频系统类
         class AudioSystem {
             constructor() {
                 this.audioContext = null;
                 this.isInitialized = false;
-                this.sounds = {};
                 this.musicGainNode = null;
                 this.isPlaying = false;
+                this.musicTimeouts = [];
+                this.oscillators = [];
                 this.init();
             }
 
@@ -1276,22 +1321,14 @@
                     this.isInitialized = true;
                 } catch (error) {
                     console.error('Failed to initialize audio system:', error);
-                    this.fallbackToHTMLAudio();
+                    this.isInitialized = false;
                 }
             }
 
-            fallbackToHTMLAudio() {
-                console.log('Using HTML Audio fallback');
-                // 创建简单的HTML音频元素作为后备
-                this.sounds.alarm = new Audio();
-                this.sounds.alarm.preload = 'auto';
-                // 使用在线音频文件作为后备
-                this.sounds.alarm.src = 'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3';
-                this.isInitialized = true;
-            }
-
             async requestPermission() {
-                if (!this.isInitialized) return false;
+                if (!this.isInitialized) {
+                    await this.init();
+                }
 
                 try {
                     if (this.audioContext && this.audioContext.state === 'suspended') {
@@ -1325,13 +1362,6 @@
                         oscillator.stop(this.audioContext.currentTime + 0.5);
                         
                         console.log('Test sound played successfully');
-                    } else if (this.sounds.alarm) {
-                        // 后备方案：使用HTML Audio
-                        await this.sounds.alarm.play();
-                        setTimeout(() => {
-                            this.sounds.alarm.pause();
-                            this.sounds.alarm.currentTime = 0;
-                        }, 500);
                     }
                 } catch (error) {
                     console.error('Test sound failed:', error);
@@ -1351,9 +1381,6 @@
                             }, i * 300);
                         }
                         console.log('Alarm sound played via Web Audio API');
-                    } else if (this.sounds.alarm) {
-                        await this.sounds.alarm.play();
-                        console.log('Alarm sound played via HTML Audio');
                     }
                 } catch (error) {
                     console.error('Alarm sound failed:', error);
@@ -1380,7 +1407,7 @@
                 oscillator.stop(this.audioContext.currentTime + duration);
             }
 
-            async playFocusEndMusic() {
+            async playFocusEndMusic(duration = 10) {
                 if (!elements.sound_toggle.checked || this.isPlaying) return;
 
                 try {
@@ -1390,23 +1417,31 @@
                     // 播放舒缓的和弦进行
                     const chords = [
                         [261.63, 329.63, 392.00], // C Major
-                        [246.94, 311.13, 369.99], // B Minor  
-                        [220.00, 277.18, 329.63], // A Minor
-                        [246.94, 311.13, 369.99], // B Minor
+                        [293.66, 369.99, 440.00], // D Major  
+                        [329.63, 415.30, 493.88], // E Major
+                        [349.23, 440.00, 523.25], // F Major
+                        [392.00, 493.88, 587.33], // G Major
+                        [440.00, 554.37, 659.25], // A Major
+                        [493.88, 622.25, 739.99], // B Major
+                        [523.25, 659.25, 783.99], // C Major (octave)
                     ];
                     
+                    const chordDuration = duration / chords.length;
+                    
                     for (let i = 0; i < chords.length; i++) {
-                        setTimeout(() => {
+                        const timeout = setTimeout(() => {
                             if (this.isPlaying) {
-                                this.playChord(chords[i], 2.0);
+                                this.playChord(chords[i], chordDuration);
                             }
-                        }, i * 2000);
+                        }, i * chordDuration * 1000);
+                        this.musicTimeouts.push(timeout);
                     }
                     
-                    // 10秒后停止音乐
-                    setTimeout(() => {
+                    // 音乐结束后停止
+                    const endTimeout = setTimeout(() => {
                         this.stopMusic();
-                    }, 10000);
+                    }, duration * 1000);
+                    this.musicTimeouts.push(endTimeout);
                     
                 } catch (error) {
                     console.error('Focus end music failed:', error);
@@ -1414,33 +1449,65 @@
                 }
             }
 
-            async playBreakEndMusic() {
+            async playBreakEndMusic(duration = 10) {
                 if (!elements.sound_toggle.checked || this.isPlaying) return;
 
                 try {
                     this.isPlaying = true;
                     showMusicIndicator(true, '🎵 休息结束音乐');
                     
-                    // 播放上升的音阶
-                    const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+                    // 播放渐进上升的音阶
+                    const noteCount = Math.floor(duration * 2); // 每秒播放2个音符
+                    const baseFreq = 261.63; // C4
                     
-                    for (let i = 0; i < notes.length; i++) {
-                        setTimeout(() => {
+                    for (let i = 0; i < noteCount; i++) {
+                        const timeout = setTimeout(() => {
                             if (this.isPlaying) {
-                                this.createBeepSound(notes[i], 0.5);
+                                // 使用五声音阶，听起来更和谐
+                                const pentatonicScale = [1, 1.125, 1.265, 1.5, 1.687];
+                                const octave = Math.floor(i / 5);
+                                const noteIndex = i % 5;
+                                const frequency = baseFreq * Math.pow(2, octave) * pentatonicScale[noteIndex];
+                                
+                                this.createMelodyNote(frequency, 0.8);
                             }
-                        }, i * 400);
+                        }, i * 500); // 每0.5秒一个音符
+                        this.musicTimeouts.push(timeout);
                     }
                     
-                    // 5秒后停止音乐
-                    setTimeout(() => {
+                    // 音乐结束后停止
+                    const endTimeout = setTimeout(() => {
                         this.stopMusic();
-                    }, 5000);
+                    }, duration * 1000);
+                    this.musicTimeouts.push(endTimeout);
                     
                 } catch (error) {
                     console.error('Break end music failed:', error);
                     this.stopMusic();
                 }
+            }
+
+            createMelodyNote(frequency, duration = 0.5) {
+                if (!this.audioContext || this.audioContext.state !== 'running') return;
+
+                const oscillator = this.audioContext.createOscillator();
+                const gainNode = this.audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(this.musicGainNode);
+                
+                oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+                oscillator.type = 'triangle'; // 更柔和的音色
+                
+                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.08, this.audioContext.currentTime + 0.05);
+                gainNode.gain.setValueAtTime(0.08, this.audioContext.currentTime + duration - 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+                
+                oscillator.start(this.audioContext.currentTime);
+                oscillator.stop(this.audioContext.currentTime + duration);
+                
+                this.oscillators.push(oscillator);
             }
 
             playChord(frequencies, duration = 1.0) {
@@ -1458,16 +1525,34 @@
                     
                     gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
                     gainNode.gain.linearRampToValueAtTime(0.05, this.audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.05, this.audioContext.currentTime + duration - 0.3);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
                     
                     oscillator.start(this.audioContext.currentTime);
                     oscillator.stop(this.audioContext.currentTime + duration);
+                    
+                    this.oscillators.push(oscillator);
                 });
             }
 
             stopMusic() {
                 this.isPlaying = false;
                 showMusicIndicator(false);
+                
+                // 清理所有超时
+                this.musicTimeouts.forEach(timeout => clearTimeout(timeout));
+                this.musicTimeouts = [];
+                
+                // 停止所有振荡器
+                this.oscillators.forEach(osc => {
+                    try {
+                        osc.stop();
+                    } catch (e) {
+                        // 振荡器可能已经停止
+                    }
+                });
+                this.oscillators = [];
+                
                 console.log('Music stopped');
             }
 
@@ -1499,10 +1584,8 @@
             breakCount: 0,
             longBreakCount: 0,
             bubbleEnabled: true,
-            focusMusicDelay: 10,
-            breakMusicDelay: 10,
-            focusMusicTimeout: null,
-            breakMusicTimeout: null,
+            focusMusicDuration: 10,
+            breakMusicDuration: 10,
             todayFocusSessions: 0,
             todayFocusMinutes: 0,
             maxFocusDuration: 0,
@@ -1514,12 +1597,12 @@
         const elements = (() => {
             const cache = {};
             const ids = [
-                'timer', 'timer-mode', 'timer-label', 'start-btn', 'pause-btn', 'skip-btn',
+                'timer', 'timer-mode', 'timer-label', 'start-btn', 'pause-btn', 'reset-btn', 'skip-btn',
                 'focus-count', 'break-count', 'long-break-count', 'progress-ring',
                 'notification', 'notification-text', 'sound-toggle', 'notification-toggle', 'vibration-toggle',
                 'bubble-toggle', 'breathing-bubble', 'settings-toggle', 'settings-panel',
-                'focus-music-delay', 'focus-music-delay-value', 'break-music-delay',
-                'break-music-delay-value', 'today-focus-count', 'today-focus-minutes',
+                'focus-music-duration', 'focus-music-duration-value', 'break-music-duration',
+                'break-music-duration-value', 'today-focus-count', 'today-focus-minutes',
                 'max-focus-duration', 'music-indicator', 'audio-test-panel', 'audio-test-btn'
             ];
 
@@ -1609,7 +1692,7 @@
             const neuralContainer = document.getElementById('neural-network');
             if (!neuralContainer) return;
             
-            const lineCount = performanceManager.maxParticles < 60 ? 8 : 12; // 减少连接线数量
+            const lineCount = performanceManager.maxParticles < 60 ? 8 : 12;
             const fragment = document.createDocumentFragment();
             
             for (let i = 0; i < lineCount; i++) {
@@ -1617,7 +1700,7 @@
                 line.className = 'connection-line';
                 
                 const angle = Math.random() * 360;
-                const length = Math.random() * 200 + 80; // 减少长度范围
+                const length = Math.random() * 200 + 80;
                 const x = Math.random() * window.innerWidth;
                 const y = Math.random() * window.innerHeight;
                 
@@ -1699,30 +1782,6 @@
             }
         }
 
-        function clearMusicTimeouts() {
-            if (state.focusMusicTimeout) {
-                clearTimeout(state.focusMusicTimeout);
-                state.focusMusicTimeout = null;
-            }
-            if (state.breakMusicTimeout) {
-                clearTimeout(state.breakMusicTimeout);
-                state.breakMusicTimeout = null;
-            }
-            showMusicIndicator(false);
-        }
-
-        function stopAllMusic() {
-            try {
-                elements.focus_end_music.pause();
-                elements.focus_end_music.currentTime = 0;
-                elements.break_end_music.pause();
-                elements.break_end_music.currentTime = 0;
-            } catch (e) {
-                console.warn('Error stopping music:', e);
-            }
-            showMusicIndicator(false);
-        }
-
         // Timer functions with performance optimization
         const updateTimerDisplay = utils.throttle(() => {
             const timeString = utils.formatTime(state.timeLeft);
@@ -1733,7 +1792,7 @@
             }
             
             updateProgressRing();
-        }, 100); // 限制更新频率
+        }, 100);
 
         function updateProgressRing() {
             const radius = parseFloat(elements.progressCircle.getAttribute('r'));
@@ -1752,58 +1811,22 @@
             elements.progressCircle.style.strokeDashoffset = Math.max(0, offset);
         }
 
-        function scheduleFocusEndMusic() {
-            if (state.mode !== 'focus' || !elements.sound_toggle.checked) return;
+        function updateHistoryStats() {
+            checkAndResetDailyHistory();
             
-            const delayMs = state.focusMusicDelay * 1000;
-            state.focusMusicTimeout = setTimeout(() => {
-                showMusicIndicator(true, '🎵 专注结束音乐');
-                elements.focus_end_music.play()
-                    .then(() => {
-                        setTimeout(() => {
-                            elements.focus_end_music.pause();
-                            elements.focus_end_music.currentTime = 0;
-                            showMusicIndicator(false);
-                        }, 20000);
-                    })
-                    .catch(e => {
-                        console.warn("Focus end music play failed:", e);
-                        showMusicIndicator(false);
-                    });
-            }, delayMs);
+            elements.today_focus_count.textContent = state.todayFocusSessions;
+            elements.today_focus_minutes.textContent = state.todayFocusMinutes;
+            elements.max_focus_duration.textContent = state.maxFocusDuration;
         }
 
-        function scheduleBreakEndMusic() {
-            if (state.mode === 'focus' || !elements.sound_toggle.checked) return;
-            
-            const timeBeforeEnd = state.breakMusicDelay;
-            const triggerTime = state.timeLeft - timeBeforeEnd;
-            
-            if (triggerTime <= 0) {
-                showMusicIndicator(true, '🎵 休息结束音乐');
-                elements.break_end_music.play()
-                    .catch(e => {
-                        console.warn("Break end music play failed:", e);
-                        showMusicIndicator(false);
-                    });
-                return;
-            }
-            
-            const delayMs = triggerTime * 1000;
-            state.breakMusicTimeout = setTimeout(() => {
-                showMusicIndicator(true, '🎵 休息结束音乐');
-                elements.break_end_music.play()
-                    .catch(e => {
-                        console.warn("Break end music play failed:", e);
-                        showMusicIndicator(false);
-                    });
-            }, delayMs);
+        function updateMusicDurationDisplays() {
+            elements.focus_music_duration_value.textContent = state.focusMusicDuration + 's';
+            elements.break_music_duration_value.textContent = state.breakMusicDuration + 's';
         }
 
         // Main timer functions
         function setMode(mode) {
-            clearMusicTimeouts();
-            stopAllMusic();
+            audioSystem.stopMusic();
             
             state.mode = mode;
             document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1845,14 +1868,7 @@
             if (state.running) return;
             
             state.running = true;
-            elements.start_btn.innerHTML = '<i class="fas fa-redo"></i><span>重置</span>';
             elements.pause_btn.disabled = false;
-            
-            if (state.mode === 'focus') {
-                scheduleFocusEndMusic();
-            } else {
-                scheduleBreakEndMusic();
-            }
             
             state.interval = setInterval(() => {
                 state.timeLeft--;
@@ -1871,37 +1887,24 @@
             if (!state.running) return;
             
             clearInterval(state.interval);
-            clearMusicTimeouts();
-            stopAllMusic();
+            audioSystem.stopMusic();
             state.running = false;
-            elements.start_btn.innerHTML = '<i class="fas fa-play"></i><span>继续</span>';
             elements.pause_btn.disabled = true;
         }
 
         function resetTimer() {
             clearInterval(state.interval);
-            clearMusicTimeouts();
-            stopAllMusic();
+            audioSystem.stopMusic();
             state.running = false;
             
             setMode(state.mode);
             
-            elements.start_btn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
             elements.pause_btn.disabled = false;
             updateTimerDisplay();
-        }
-        
-        function updateHistoryStats() {
-            checkAndResetDailyHistory();
-            
-            elements.today_focus_count.textContent = state.todayFocusSessions;
-            elements.today_focus_minutes.textContent = state.todayFocusMinutes;
-            elements.max_focus_duration.textContent = state.maxFocusDuration;
         }
 
         function timerComplete() {
             state.running = false;
-            clearMusicTimeouts();
             
             // 播放提示音
             if (elements.sound_toggle.checked) {
@@ -1910,6 +1913,15 @@
             
             if (elements.vibration_toggle.checked && navigator.vibrate) {
                 navigator.vibrate([200, 100, 200]);
+            }
+            
+            // 根据模式播放相应的音乐
+            if (state.mode === 'focus') {
+                // 专注结束，播放放松音乐
+                audioSystem.playFocusEndMusic(state.focusMusicDuration);
+            } else {
+                // 休息结束，播放激励音乐
+                audioSystem.playBreakEndMusic(state.breakMusicDuration);
             }
             
             if (elements.notification_toggle.checked) {
@@ -1951,14 +1963,11 @@
                 elements.long_break_count.textContent = state.longBreakCount;
                 setMode('focus');
             }
-            
-            elements.start_btn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
         }
 
         function skipTimer() {
             clearInterval(state.interval);
-            clearMusicTimeouts();
-            stopAllMusic();
+            audioSystem.stopMusic();
             state.timeLeft = 0;
             updateTimerDisplay();
             timerComplete();
@@ -1977,16 +1986,9 @@
             elements.breathing_bubble.style.display = state.bubbleEnabled ? 'block' : 'none';
         }
 
-        function updateMusicDelayDisplays() {
-            elements.focus_music_delay_value.textContent = state.focusMusicDelay + 's';
-            elements.break_music_delay_value.textContent = state.breakMusicDelay + 's';
-        }
-
         // Event handlers with memory optimization
         const handleStartButton = utils.debounce(() => {
-            if (elements.start_btn.textContent.includes('重置') || elements.start_btn.textContent.includes('Reset')) {
-                resetTimer();
-            } else if (state.running) {
+            if (state.running) {
                 pauseTimer(); 
             } else {
                 startTimer();
@@ -1999,8 +2001,6 @@
                 !elements.settings_toggle.contains(e.target)) {
                 elements.settings_panel.classList.remove('show');
             }
-            
-            // 点击音频测试面板外部时不关闭面板（需要用户主动测试音频）
         };
 
         // 音频权限检查和测试
@@ -2060,9 +2060,9 @@
             
             state.bubbleEnabled = elements.bubble_toggle.checked;
             
-            elements.focus_music_delay.value = state.focusMusicDelay;
-            elements.break_music_delay.value = state.breakMusicDelay;
-            updateMusicDelayDisplays();
+            elements.focus_music_duration.value = state.focusMusicDuration;
+            elements.break_music_duration.value = state.breakMusicDuration;
+            updateMusicDurationDisplays();
             
             // 音频测试按钮事件
             elements.audio_test_btn.addEventListener('click', handleAudioTest);
@@ -2079,6 +2079,7 @@
             
             elements.start_btn.addEventListener('click', handleStartButton);
             elements.pause_btn.addEventListener('click', pauseTimer);
+            elements.reset_btn.addEventListener('click', resetTimer);
             elements.skip_btn.addEventListener('click', skipTimer);
             
             elements.bubble_toggle.addEventListener('change', () => {
@@ -2086,19 +2087,19 @@
                 toggleBubbleEffect();
             });
             
-            // Music delay controls with debouncing
-            const updateFocusDelay = utils.debounce((e) => {
-                state.focusMusicDelay = parseInt(e.target.value);
-                updateMusicDelayDisplays();
+            // Music duration controls with debouncing
+            const updateFocusDuration = utils.debounce((e) => {
+                state.focusMusicDuration = parseInt(e.target.value);
+                updateMusicDurationDisplays();
             }, 150);
             
-            const updateBreakDelay = utils.debounce((e) => {
-                state.breakMusicDelay = parseInt(e.target.value);
-                updateMusicDelayDisplays();
+            const updateBreakDuration = utils.debounce((e) => {
+                state.breakMusicDuration = parseInt(e.target.value);
+                updateMusicDurationDisplays();
             }, 150);
             
-            elements.focus_music_delay.addEventListener('input', updateFocusDelay);
-            elements.break_music_delay.addEventListener('input', updateBreakDelay);
+            elements.focus_music_duration.addEventListener('input', updateFocusDuration);
+            elements.break_music_duration.addEventListener('input', updateBreakDuration);
             
             elements.settings_toggle.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -2115,8 +2116,7 @@
             // 添加页面卸载清理
             window.addEventListener('beforeunload', () => {
                 clearInterval(state.interval);
-                clearMusicTimeouts();
-                stopAllMusic();
+                audioSystem.stopMusic();
                 performanceManager.destroy();
             });
             
@@ -2133,14 +2133,13 @@
             if (state.interval) {
                 clearInterval(state.interval);
                 state.running = false;
-                elements.start_btn.innerHTML = '<i class="fas fa-play"></i><span>开始</span>';
             }
         });
 
         // 启动应用
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(init, 500); // 延迟500ms确保所有元素加载完成
+                setTimeout(init, 500);
             });
         } else {
             setTimeout(init, 500);
