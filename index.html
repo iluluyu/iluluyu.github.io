@@ -109,12 +109,12 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
             position: relative;
             z-index: 1;
         }
@@ -123,10 +123,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            margin-bottom: 20px;
+            padding: 30px 40px;
+            margin-bottom: 50px;
             backdrop-filter: blur(25px);
-            border-radius: 20px;
+            border-radius: 30px;
             background: rgba(255, 255, 255, 0.03);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -135,14 +135,14 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 25px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
+            gap: 15px;
+            font-size: 2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #00d4ff 0%, #6366f1 50%, #8b5cf6 100%);
             -webkit-background-clip: text;
@@ -153,7 +153,7 @@
         }
 
         .logo i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             background: linear-gradient(135deg, #00d4ff, #6366f1);
             -webkit-background-clip: text;
             background-clip: text;
@@ -289,7 +289,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
         .timer-mode {
@@ -607,9 +607,8 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .settings-panel h3.card-title {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
+        .setting-item:last-child {
+            border-bottom: none;
         }
 
         .setting-label {
@@ -647,8 +646,8 @@
         }
 
         .setting-input input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: linear-gradient(135deg, #00d4ff, #6366f1);
             cursor: pointer;
@@ -749,14 +748,14 @@
 
         /* 音乐状态指示器 */
         .music-indicator {
-            position: fixed;
-            top: 15px;
-            right: 15px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: rgba(0, 212, 255, 0.1);
-            border-radius: 40px;
-            padding: 6px 14px;
+            border-radius: 50px;
+            padding: 8px 16px;
             backdrop-filter: blur(15px);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #00d4ff;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -794,76 +793,47 @@
 
         .audio-test-content {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 25px;
-            padding: 30px;
+            border-radius: 30px;
+            padding: 40px;
             text-align: center;
             backdrop-filter: blur(25px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            max-width: 350px;
+            max-width: 400px;
         }
 
         .audio-test-content i {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: #00d4ff;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: block;
         }
 
         .audio-test-content p {
-            font-size: 1rem;
-            margin-bottom: 25px;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
             color: #e2e8f0;
-            line-height: 1.5;
-        }
-
-        /* 自定义滚动条样式 */
-        .suggestions-section::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .suggestions-section::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-
-        .suggestions-section::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .suggestions-section::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 212, 255, 0.5);
+            line-height: 1.6;
         }
 
         @media (max-width: 1100px) {
             .main-content {
                 flex-direction: column;
-                gap: 20px;
             }
             
             .suggestions-section {
                 width: 100%;
-                margin-top: 20px;
-                max-height: none;
-                display: flex;
-                flex-direction: row;
-                gap: 20px;
-                overflow-x: auto;
-            }
-            
-            .card {
-                min-width: 300px;
+                margin-top: 30px;
             }
             
             .timer-display {
-                width: 250px;
-                height: 250px;
+                width: 300px;
+                height: 300px;
             }
             
             header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 25px;
                 align-items: stretch;
             }
 
@@ -879,37 +849,37 @@
 
         @media (max-width: 640px) {
             .timer-display {
-                width: 220px;
-                height: 220px;
+                width: 260px;
+                height: 260px;
             }
             
             .timer-time {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             
             .stats {
                 width: 100%;
                 justify-content: space-around;
-                padding: 12px 15px;
+                padding: 15px 20px;
             }
             
             .stat-value { 
-                font-size: 1.3rem; 
+                font-size: 1.6rem; 
             }
             
             .stat-label { 
-                font-size: 0.75rem; 
+                font-size: 0.85rem; 
             }
             
             .controls {
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 10px;
+                gap: 15px;
             }
             
             .btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+                padding: 12px 24px;
+                font-size: 1rem;
             }
 
             .mode-selector {
@@ -918,32 +888,22 @@
             }
             
             .mode-btn {
-                padding: 8px 16px;
+                padding: 12px 20px;
                 margin: 5px;
-                font-size: 0.85rem;
             }
 
             .settings-panel {
-                width: calc(100% - 20px);
-                left: 10px;
-                right: 10px;
-                top: 80px;
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+                top: 100px;
             }
             
             .notification {
-                width: calc(100% - 20px);
-                left: 10px;
-                right: 10px;
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
                 justify-content: center;
-            }
-            
-            .suggestions-section {
-                flex-direction: column;
-            }
-            
-            .card {
-                min-width: auto;
-                width: 100%;
             }
         }
     </style>
@@ -952,8 +912,8 @@
     <div class="particles" id="particles"></div>
     <div class="neural-network" id="neural-network"></div>
     
-    <div class="quantum-ring" style="width: 600px; height: 600px; top: -300px; right: -300px;"></div>
-    <div class="quantum-ring" style="width: 500px; height: 500px; bottom: -250px; left: -250px;"></div>
+    <div class="quantum-ring" style="width: 900px; height: 900px; top: -450px; right: -450px;"></div>
+    <div class="quantum-ring" style="width: 700px; height: 700px; bottom: -350px; left: -350px;"></div>
 
     <div class="music-indicator" id="music-indicator">🎵 音乐播放中...</div>
 
@@ -1051,7 +1011,7 @@
         <div class="main-content">
             <div class="timer-section">
                 <div class="timer-display">
-                    <svg class="progress-ring" id="progress-ring" viewBox="0 0 280 280">
+                    <svg class="progress-ring" id="progress-ring" viewBox="0 0 350 350">
                         <defs>
                             <linearGradient id="gradientFocus" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
@@ -1069,7 +1029,7 @@
                                 <stop offset="100%" style="stop-color:#6d28d9;stop-opacity:1" />
                             </linearGradient>
                         </defs>
-                        <circle class="progress-ring-circle" stroke="url(#gradientFocus)" stroke-width="6" fill="transparent" r="130" cx="140" cy="140"/>
+                        <circle class="progress-ring-circle" stroke="url(#gradientFocus)" stroke-width="6" fill="transparent" r="165" cx="175" cy="175"/>
                     </svg>
                     <div class="timer-content">
                         <div class="timer-mode" id="timer-mode">专注时间</div>
@@ -1870,6 +1830,11 @@
             state.running = true;
             elements.pause_btn.disabled = false;
             
+            // 显示呼吸效果
+            if (state.bubbleEnabled) {
+                elements.breathing_bubble.style.display = 'block';
+            }
+            
             state.interval = setInterval(() => {
                 state.timeLeft--;
                 updateTimerDisplay();
@@ -1890,6 +1855,9 @@
             audioSystem.stopMusic();
             state.running = false;
             elements.pause_btn.disabled = true;
+            
+            // 隐藏呼吸效果
+            elements.breathing_bubble.style.display = 'none';
         }
 
         function resetTimer() {
@@ -1900,11 +1868,13 @@
             setMode(state.mode);
             
             elements.pause_btn.disabled = false;
+            elements.breathing_bubble.style.display = 'none';
             updateTimerDisplay();
         }
 
         function timerComplete() {
             state.running = false;
+            elements.breathing_bubble.style.display = 'none';
             
             // 播放提示音
             if (elements.sound_toggle.checked) {
