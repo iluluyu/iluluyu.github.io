@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专注</title>
+    <title>星空番茄钟</title>
     <script src="https://cdn.tailwindcss.com/3.3.3"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
@@ -190,29 +190,27 @@
         createStars();
         
         // 计时器逻辑
-        let worker;
+        let timer;
         let isRunning = false;
         let currentTime = 25 * 60;
         let isBreak = false;
-
+        
         function updateTimerDisplay() {
             const minutes = Math.floor(currentTime / 60);
             const seconds = currentTime % 60;
             const displayTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.getElementById('timer-display').textContent = displayTime;
         }
-
+        
         function startTimer() {
             if (!isRunning) {
                 isRunning = true;
-                worker = new Worker('timer-worker.js');
-                worker.postMessage({ action: 'start', time: currentTime });
-                worker.onmessage = function (e) {
-                    currentTime = e.data;
+                timer = setInterval(() => {
                     if (currentTime > 0) {
+                        currentTime--;
                         updateTimerDisplay();
                     } else {
-                        worker.terminate();
+                        clearInterval(timer);
                         isRunning = false;
                         playAlarm();
                         if (isBreak) {
@@ -225,27 +223,25 @@
                         isBreak = !isBreak;
                         updateTimerDisplay();
                     }
-                };
+                }, 1000);
             }
         }
-
+        
         function resetTimer() {
-            if (worker) {
-                worker.terminate();
-            }
+            clearInterval(timer);
             isRunning = false;
             isBreak = false;
             currentTime = parseInt(document.getElementById('focus-time').value) * 60;
             document.getElementById('status-display').textContent = '准备专注';
             updateTimerDisplay();
         }
-
+        
         function playAlarm() {
             const alarmSound = document.getElementById('alarm-sound');
             alarmSound.currentTime = 0;
             alarmSound.play();
         }
-
+        
         document.getElementById('start-btn').addEventListener('click', startTimer);
         document.getElementById('reset-btn').addEventListener('click', resetTimer);
         
@@ -253,30 +249,20 @@
         let isMusicOn = true;
         const musicToggle = document.getElementById('music-toggle');
         const musicStatus = document.getElementById('music-status');
-        musicToggle.addEventListener('click', () => {
+        
+        function toggleMusic() {
             isMusicOn = !isMusicOn;
+            const alarmSound = document.getElementById('alarm-sound');
             if (isMusicOn) {
+                alarmSound.muted = false;
                 musicStatus.textContent = '音乐: 开启';
             } else {
+                alarmSound.muted = true;
                 musicStatus.textContent = '音乐: 关闭';
             }
-        });
-    </script>
-    <script type="worker" id="timer-worker.js">
-        let timer;
-        self.onmessage = function (e) {
-            if (e.data.action === 'start') {
-                let currentTime = e.data.time;
-                timer = setInterval(() => {
-                    if (currentTime > 0) {
-                        currentTime--;
-                        self.postMessage(currentTime);
-                    } else {
-                        clearInterval(timer);
-                    }
-                }, 1000);
-            }
-        };
+        }
+        
+        musicToggle.addEventListener('click', toggleMusic);
     </script>
 </body>
 </html>
