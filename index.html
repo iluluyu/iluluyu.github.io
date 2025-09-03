@@ -3,27 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Homepage</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Lu Luyu - Personal Homepage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Source+Code+Pro:wght@300;400&display=swap');
+
+        :root {
+            --primary-color: #00ffff;
+            --background-color: #020412;
+            --card-background: rgba(10, 20, 40, 0.7);
+            --glow-shadow: 0 0 7px var(--primary-color), 0 0 14px var(--primary-color), 0 0 28px var(--primary-color);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Source Code Pro', monospace;
+            color: #e0e0e0;
+            background-color: var(--background-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill="%23040a24" fill-opacity="0.5"><path d="M50 0 L100 25 L100 75 L50 100 L0 75 L0 25 Z M50 50 L0 25"/></g></svg>');
+            animation: bg-pan 150s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes bg-pan { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+
+        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.02) 50%, rgba(255,255,255,0)); background-size: 100% 4px; z-index: 1; pointer-events: none; animation: scan 8s linear infinite; }
+
+        @keyframes scan { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+        .content-container { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 40px; }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 80px;
+            text-align: center;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .avatar-container { position: relative; width: 170px; height: 170px; margin-bottom: 30px; }
+
+        .avatar-placeholder { width: 100%; height: 100%; background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: var(--glow-shadow); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+
+        .avatar-container:hover .avatar-placeholder { transform: scale(1.1); box-shadow: 0 0 12px var(--primary-color), 0 0 24px var(--primary-color), 0 0 48px var(--primary-color); }
+
+        .profile-header h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5em; margin: 0; color: #fff; text-shadow: var(--glow-shadow); letter-spacing: 3px; }
+        
+        .type-cursor { animation: blink 1s step-end infinite; color: var(--primary-color); }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .profile-header h2 { font-family: 'Source Code Pro', monospace; font-size: 1.5em; font-weight: 400; color: #c0c0c0; margin-top: 15px; text-transform: uppercase; }
+
+        main.grid-container { display: grid; grid-template-columns: 1fr; gap: 40px; width: 100%; }
+
+        .card {
+            background: var(--card-background);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 40px;
+            text-align: left;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.7);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card:hover { transform: translateY(-15px); box-shadow: 0 30px 70px rgba(0,0,0,0.9); border-color: rgba(0, 255, 255, 0.7); }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.3em;
+            margin-top: 0;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
+            color: var(--primary-color);
+            text-shadow: var(--glow-shadow);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h3 i { margin-right: 20px; font-size: 0.9em; text-shadow: none; animation: icon-pulse 2.5s infinite ease-in-out; }
+
+        @keyframes icon-pulse { 0%, 100% { transform: scale(1); color: var(--primary-color); } 50% { transform: scale(1.2); color: #fff; } }
+
+        .card p, .card ul { font-size: 1.25em; line-height: 2; font-weight: 300; color: #e5e5e5; }
+
+        .card ul { list-style: none; padding-left: 0; }
+
+        .card ul li { padding: 15px 5px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: background-color 0.3s ease; display: flex; align-items: center; }
+        
+        .card ul li::before { content: '>>'; font-family: 'Source Code Pro', monospace; color: var(--primary-color); margin-right: 18px; transition: transform 0.3s ease; }
+
+        .card ul li:hover { background-color: rgba(0, 255, 255, 0.08); }
+        .card ul li:hover::before { transform: translateX(6px); }
+        .card ul li:last-child { border-bottom: none; }
+
+        .card a { color: #b0f0ff; text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
+        .card a:hover { color: #fff; text-shadow: 0 0 8px #fff; }
+
+        .profile-footer { margin-top: 80px; text-align: center; font-size: 1.1em; color: #aaa; animation: fadeInUp 1s ease-out 0.5s; animation-fill-mode: backwards; }
+        .profile-footer a { color: #b0f0ff; text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
+        .profile-footer a:hover { color: var(--primary-color); text-shadow: var(--glow-shadow); }
+
+        @media (min-width: 1024px) {
+            main.grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                align-items: start;
+            }
+            #bio { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 768px) {
+            .content-container { padding: 30px 15px; }
+            .profile-header h1 { font-size: 2.8em; }
+            .profile-header h2 { font-size: 1.2em; }
+            .card h3 { font-size: 2em; }
+            .card p, .card ul { font-size: 1.15em; }
+        }
+    </style>
 </head>
 <body>
-    <canvas id="bg"></canvas>
-    <div id="content-wrapper">
-        <div id="content">
-            <h1>[Your Name]</h1>
-            <h2>[Your University or Institution]</h2>
-            <p>[A brief bio about your research, interests, and work. You can elaborate a bit here, and the content will wrap nicely within the card.]</p>
+    <div class="scanlines"></div>
+    <div id="particles-js"></div>
+
+    <div class="content-container">
+        <header class="profile-header">
+            <div class="avatar-container">
+                <div class="avatar-placeholder"></div>
+            </div>
+            <h1><span id="type-text"></span><span class="type-cursor">|</span></h1>
+            <h2>PhD Candidate in Quantum Information @ Fudan University</h2>
+        </header>
+
+        <main class="grid-container">
+            <section id="bio" class="card">
+                <h3><i class="fas fa-user-astronaut"></i>Biography</h3>
+                <p>Dedicated to advancing the frontier of quantum information science. My research focuses on the theoretical underpinnings of quantum computing, including the development of robust quantum error correction codes and the design of novel quantum algorithms to solve classically intractable problems.</p>
+            </section>
+
+            <section id="publications" class="card">
+                <h3><i class="fas fa-atom"></i>Key Publications</h3>
+                <ul>
+                    <li><a href="#">A Study on the Robustness of Quantum Entanglement Networks</a></li>
+                    <li><a href="#">A Theoretical Model for a New Type of Topological Qubit</a></li>
+                    <li><a href="#">Quantum State Decoherence Suppression via Machine Learning</a></li>
+                    <li><a href="#">[Placeholder for Future Groundbreaking Work]</a></li>
+                </ul>
+            </section>
             
-            <h3>Publications</h3>
-            <ul>
-                <li><a href="#" target="_blank">[Publication Title 1]</a></li>
-                <li><a href="#" target="_blank">[Publication Title 2]</a></li>
-                <li><a href="#" target="_blank">[Publication Title 3]</a></li>
-                <!-- Add more publications here -->
-            </ul>
-        </div>
+            <section id="contact" class="card">
+                <h3><i class="fas fa-satellite-dish"></i>Contact & Links</h3>
+                 <ul>
+                    <li><a href="mailto:iluluyu@outlook.com">Email: iluluyu@outlook.com</a></li>
+                    <li><a href="#">LinkedIn: [Your Profile]</a></li>
+                    <li><a href="#">GitHub: [Your Profile]</a></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="profile-footer">
+            <p>&copy; 2024 Lu Luyu | Quantum Realm Explorer</p>
+        </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        const particlesConfig = {
+            "particles": { "number": { "value": 120, "density": { "enable": true, "value_area": 1000 } }, "color": { "value": "#00ffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.6, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 2.5, "random": true }, "line_linked": { "enable": true, "distance": 160, "color": "#00ffff", "opacity": 0.25, "width": 1 }, "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" } },
+            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 200, "line_opacity": 0.4 }, "push": { "particles_nb": 4 } } },
+            "retina_detect": true
+        };
+        particlesJS('particles-js', particlesConfig);
+
+        const textToType = "Lu Luyu";
+        const typingSpeed = 180;
+        const textElement = document.getElementById('type-text');
+        let charIndex = 0;
+        function type() {
+            if (charIndex < textToType.length) {
+                textElement.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(type, typingSpeed);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
 </body>
 </html>
