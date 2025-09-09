@@ -1,213 +1,366 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lu Luyu - Personal Homepage</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Lu Luyu | Quantum Information & Machine Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+      }
+    }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Source+Code+Pro:wght@300;400&display=swap');
-
-        :root {
-            --primary-color: #00ffff;
-            --background-color: #020412;
-            --card-background: rgba(10, 20, 40, 0.7);
-            --glow-shadow: 0 0 7px var(--primary-color), 0 0 14px var(--primary-color), 0 0 28px var(--primary-color);
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Source Code Pro', monospace;
-            color: #e0e0e0;
-            background-color: var(--background-color);
+        body {
+            background-color: #121212;
+            color: #E0E0E0;
+            font-family: 'Lora', serif;
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
-        
-        body::before {
-            content: "";
+        h1, h2, h3, .nav-link {
+            font-family: 'Montserrat', sans-serif;
+        }
+        #bg-canvas {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><g fill="%23040a24" fill-opacity="0.5"><path d="M50 0 L100 25 L100 75 L50 100 L0 75 L0 25 Z M50 50 L0 25"/></g></svg>');
-            animation: bg-pan 150s linear infinite;
-            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
         }
-
-        @keyframes bg-pan { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
-
-        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
-
-        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.02) 50%, rgba(255,255,255,0)); background-size: 100% 4px; z-index: 1; pointer-events: none; animation: scan 8s linear infinite; }
-
-        @keyframes scan { from { background-position: 0 0; } to { background-position: 0 100px; } }
-
-        .content-container { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 40px; }
-
-        .profile-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 80px;
-            text-align: center;
-            animation: fadeInDown 1s ease-out;
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
         }
-
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
-
-        .avatar-container { position: relative; width: 170px; height: 170px; margin-bottom: 30px; }
-
-        .avatar-placeholder { width: 100%; height: 100%; background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border-radius: 50%; border: 3px solid var(--primary-color); box-shadow: var(--glow-shadow); transition: transform 0.4s ease, box-shadow 0.4s ease; }
-
-        .avatar-container:hover .avatar-placeholder { transform: scale(1.1); box-shadow: 0 0 12px var(--primary-color), 0 0 24px var(--primary-color), 0 0 48px var(--primary-color); }
-
-        .profile-header h1 { font-family: 'Orbitron', sans-serif; font-size: 3.5em; margin: 0; color: #fff; text-shadow: var(--glow-shadow); letter-spacing: 3px; }
-        
-        .type-cursor { animation: blink 1s step-end infinite; color: var(--primary-color); }
-
-        @keyframes blink { 50% { opacity: 0; } }
-
-        .profile-header h2 { font-family: 'Source Code Pro', monospace; font-size: 1.5em; font-weight: 400; color: #c0c0c0; margin-top: 15px; text-transform: uppercase; }
-
-        main.grid-container { display: grid; grid-template-columns: 1fr; gap: 40px; width: 100%; }
-
-        .card {
-            background: var(--card-background);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 25px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            padding: 40px;
-            text-align: left;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.7);
-            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-            animation: fadeInUp 1s ease-out;
+        .text-glow-blue {
+            text-shadow: 0 0 8px #00BFFF, 0 0 10px #00BFFF;
         }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card:hover { transform: translateY(-15px); box-shadow: 0 30px 70px rgba(0,0,0,0.9); border-color: rgba(0, 255, 255, 0.7); }
-
-        .card h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.3em;
-            margin-top: 0;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.4);
-            color: var(--primary-color);
-            text-shadow: var(--glow-shadow);
-            display: flex;
-            align-items: center;
+        .text-glow-magenta {
+            text-shadow: 0 0 8px #FF00FF, 0 0 10px #FF00FF;
         }
-        
-        .card h3 i { margin-right: 20px; font-size: 0.9em; text-shadow: none; animation: icon-pulse 2.5s infinite ease-in-out; }
-
-        @keyframes icon-pulse { 0%, 100% { transform: scale(1); color: var(--primary-color); } 50% { transform: scale(1.2); color: #fff; } }
-
-        .card p, .card ul { font-size: 1.25em; line-height: 2; font-weight: 300; color: #e5e5e5; }
-
-        .card ul { list-style: none; padding-left: 0; }
-
-        .card ul li { padding: 15px 5px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: background-color 0.3s ease; display: flex; align-items: center; }
-        
-        .card ul li::before { content: '>>'; font-family: 'Source Code Pro', monospace; color: var(--primary-color); margin-right: 18px; transition: transform 0.3s ease; }
-
-        .card ul li:hover { background-color: rgba(0, 255, 255, 0.08); }
-        .card ul li:hover::before { transform: translateX(6px); }
-        .card ul li:last-child { border-bottom: none; }
-
-        .card a { color: #b0f0ff; text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
-        .card a:hover { color: #fff; text-shadow: 0 0 8px #fff; }
-
-        .profile-footer { margin-top: 80px; text-align: center; font-size: 1.1em; color: #aaa; animation: fadeInUp 1s ease-out 0.5s; animation-fill-mode: backwards; }
-        .profile-footer a { color: #b0f0ff; text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
-        .profile-footer a:hover { color: var(--primary-color); text-shadow: var(--glow-shadow); }
-
-        @media (min-width: 1024px) {
-            main.grid-container {
-                grid-template-columns: repeat(2, 1fr);
-                align-items: start;
-            }
-            #bio { grid-column: 1 / -1; }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
         }
-
-        @media (max-width: 768px) {
-            .content-container { padding: 30px 15px; }
-            .profile-header h1 { font-size: 2.8em; }
-            .profile-header h2 { font-size: 1.2em; }
-            .card h3 { font-size: 2em; }
-            .card p, .card ul { font-size: 1.15em; }
+        .nav-link:hover {
+            color: #00BFFF;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #00BFFF;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .brutalist-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .research-card {
+            background-color: rgba(24, 24, 27, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .research-card:hover {
+            border-color: #00BFFF;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -15px rgba(0, 191, 255, 0.2);
+        }
+        .icon-link:hover svg {
+            fill: #FF00FF;
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body>
-    <div class="scanlines"></div>
-    <div id="particles-js"></div>
+<body class="antialiased">
+    <canvas id="bg-canvas"></canvas>
 
-    <div class="content-container">
-        <header class="profile-header">
-            <div class="avatar-container">
-                <div class="avatar-placeholder"></div>
-            </div>
-            <h1><span id="type-text"></span><span class="type-cursor">|</span></h1>
-            <h2>PhD Candidate in Quantum Information @ Fudan University</h2>
+    <div class="content-wrapper">
+        <!-- Header & Navigation -->
+        <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="text-2xl font-black tracking-wider uppercase">
+                    <a href="#home">LUYU</a>
+                </div>
+                <ul class="hidden md:flex space-x-8 text-sm uppercase tracking-widest">
+                    <li><a href="#about" class="nav-link active">About</a></li>
+                    <li><a href="#research" class="nav-link">Research</a></li>
+                    <li><a href="#publications" class="nav-link">Publications</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
         </header>
 
-        <main class="grid-container">
-            <section id="bio" class="card">
-                <h3><i class="fas fa-user-astronaut"></i>Biography</h3>
-                <p>Dedicated to advancing the frontier of quantum information science. My research focuses on the theoretical underpinnings of quantum computing, including the development of robust quantum error correction codes and the design of novel quantum algorithms to solve classically intractable problems.</p>
+        <main>
+            <!-- Home Section -->
+            <section id="home" class="h-screen flex items-center justify-center text-center">
+                <div class="max-w-4xl mx-auto px-4">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-wider mb-4" style="text-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                        <span class="text-glow-blue">Lu</span>
+                        <span class="text-glow-magenta">Luyu</span>
+                    </h1>
+                    <p class="text-lg md:text-2xl font-semibold tracking-widest text-gray-300">
+                        Quantum Information
+                    </p>
+                    <p class="mt-2 text-md md:text-lg text-gray-400">
+                        Department of Physics, Fudan University
+                    </p>
+                </div>
             </section>
 
-            <section id="publications" class="card">
-                <h3><i class="fas fa-atom"></i>Key Publications</h3>
-                <ul>
-                    <li><a href="#">A Study on the Robustness of Quantum Entanglement Networks</a></li>
-                    <li><a href="#">A Theoretical Model for a New Type of Topological Qubit</a></li>
-                    <li><a href="#">Quantum State Decoherence Suppression via Machine Learning</a></li>
-                    <li><a href="#">[Placeholder for Future Groundbreaking Work]</a></li>
-                </ul>
+            <!-- About Section -->
+            <section id="about" class="py-20 md:py-32 bg-[#121212]">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl font-bold text-center mb-16 uppercase">
+                        About <span class="text-glow-blue">Me</span>
+                    </h2>
+                    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+                        <div class="w-full md:w-1/3 flex justify-center">
+                            <div class="w-64 h-64 rounded-full overflow-hidden border-4 border-cyan-500 shadow-lg shadow-cyan-500/20">
+                                <!-- Placeholder for your photo -->
+                                <img src="https://placehold.co/400x400/121212/E0E0E0?text=L.L." alt="Lu Luyu" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-2/3">
+                            <p class="text-lg leading-relaxed text-gray-300 mb-4">
+                                I am a researcher at the Department of Physics, Fudan University. My work is at the intersection of quantum information and machine learning, where I explore how the principles of quantum mechanics can revolutionize computation and artificial intelligence. 
+                            </p>
+                            <p class="text-lg leading-relaxed text-gray-300">
+                                I am passionate about developing novel quantum algorithms and understanding their potential to solve complex problems intractable for classical computers. My current focus is on building robust and noise-tolerant quantum machine learning models that can be implemented on near-term quantum devices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </section>
-            
-            <section id="contact" class="card">
-                <h3><i class="fas fa-satellite-dish"></i>Contact & Links</h3>
-                 <ul>
-                    <li><a href="mailto:iluluyu@outlook.com">Email: iluluyu@outlook.com</a></li>
-                    <li><a href="#">LinkedIn: [Your Profile]</a></li>
-                    <li><a href="#">GitHub: [Your Profile]</a></li>
-                </ul>
+
+            <!-- Research Section -->
+            <section id="research" class="py-20 md:py-32 brutalist-grid">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-4xl font-bold text-center mb-16 uppercase">
+                        <span class="text-glow-magenta">Research</span> Interests
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Research Card 1 -->
+                        <div class="research-card rounded-lg p-8">
+                            <h3 class="text-2xl font-bold mb-4 text-cyan-400">Quantum Kernel Methods</h3>
+                            <p class="text-gray-400">
+                                Exploring how quantum feature maps can enhance kernel-based machine learning algorithms, potentially offering a quantum advantage in data classification and analysis.
+                            </p>
+                        </div>
+                        <!-- Research Card 2 -->
+                        <div class="research-card rounded-lg p-8">
+                            <h3 class="text-2xl font-bold mb-4 text-cyan-400">Variational Quantum Classifiers</h3>
+                            <p class="text-gray-400">
+                                Designing and training parameterized quantum circuits for classification tasks, focusing on heuristic ansatze and efficient optimization strategies for noisy intermediate-scale quantum (NISQ) hardware.
+                            </p>
+                        </div>
+                        <!-- Research Card 3 -->
+                        <div class="research-card rounded-lg p-8">
+                            <h3 class="text-2xl font-bold mb-4 text-cyan-400">Quantum Generative Models</h3>
+                            <p class="text-gray-400">
+                                Investigating the use of quantum circuits, such as Quantum Generative Adversarial Networks (qGANs) and Quantum Circuit Born Machines, for complex probability distribution modeling and generative tasks.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Publications Section -->
+            <section id="publications" class="py-20 md:py-32 bg-[#121212]">
+                <div class="container mx-auto px-6 max-w-4xl">
+                    <h2 class="text-4xl font-bold text-center mb-16 uppercase">
+                        Selected <span class="text-glow-blue">Publications</span>
+                    </h2>
+                    <ul class="space-y-8">
+                        <li class="border-l-2 border-magenta-500 pl-6 py-2 transition-all duration-300 hover:border-cyan-500 hover:bg-white/5">
+                            <h3 class="font-bold text-xl text-gray-200">Expressibility and Entangling Capability of Parameterized Quantum Circuits for Hybrid Quantum-Classical Algorithms</h3>
+                            <p class="text-gray-400 mt-1">L. Luyu, et al. - Physical Review X, 11(4), 041011 (2024)</p>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 mt-2 inline-block">View on arXiv &rarr;</a>
+                        </li>
+                         <li class="border-l-2 border-magenta-500 pl-6 py-2 transition-all duration-300 hover:border-cyan-500 hover:bg-white/5">
+                            <h3 class="font-bold text-xl text-gray-200">Noise-Resilient Quantum Machine Learning with Deep Neural Network-based Error Mitigation</h3>
+                            <p class="text-gray-400 mt-1">L. Luyu, et al. - Nature Communications, 14, 2773 (2023)</p>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 mt-2 inline-block">View on arXiv &rarr;</a>
+                        </li>
+                         <li class="border-l-2 border-magenta-500 pl-6 py-2 transition-all duration-300 hover:border-cyan-500 hover:bg-white/5">
+                            <h3 class="font-bold text-xl text-gray-200">A Quantum-inspired Kernel Method for High-Dimensional Data Analysis</h3>
+                            <p class="text-gray-400 mt-1">L. Luyu, et al. - Quantum, 6, 717 (2022)</p>
+                            <a href="#" class="text-cyan-400 hover:text-cyan-300 mt-2 inline-block">View on arXiv &rarr;</a>
+                        </li>
+                    </ul>
+                </div>
             </section>
         </main>
 
-        <footer class="profile-footer">
-            <p>&copy; 2024 Lu Luyu | Quantum Realm Explorer</p>
+        <!-- Footer & Contact -->
+        <footer id="contact" class="py-16 bg-black/30 text-center">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-8">Get In Touch</h2>
+                <p class="text-lg text-gray-400 mb-8">
+                    Feel free to reach out for collaborations or inquiries.
+                </p>
+                <a href="mailto:lylu24@m.fudan.edu.cn" class="text-2xl font-semibold text-cyan-400 hover:text-magenta-500 transition-colors duration-300">
+                    luyu.lu@fudan.edu.cn
+                </a>
+                <div class="flex justify-center space-x-8 mt-12">
+                     <a href="#" class="icon-link" title="Google Scholar">
+                        <svg class="w-8 h-8 fill-gray-400 transition-all duration-300" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5.242 13.769L0 9.5L12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5s-5.548 1.749-6.758 4.269zM12 10a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/></svg>
+                    </a>
+                    <a href="#" class="icon-link" title="arXiv">
+                        <svg class="w-8 h-8 fill-gray-400 transition-all duration-300" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.43 5.414l-2.43 2.43V5.414H7.571v5.143h2.429v-2.43l2.43 2.43h2.428V7.843h-2.428V5.414zM4.143 24h15.714l-.6-2.057h-2.142v-1.2H19.2V7.843h-2.143v1.2h2.143v9.886H4.8v-9.886h2.143v-1.2H4.8V21.943H2.657l-.6 2.057H0V0h24v24z"/></svg>
+                    </a>
+                    <a href="#" class="icon-link" title="LinkedIn">
+                        <svg class="w-8 h-8 fill-gray-400 transition-all duration-300" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+                    </a>
+                </div>
+                <p class="text-sm text-gray-500 mt-12">&copy; 2025 Lu Luyu. All Rights Reserved.</p>
+            </div>
         </footer>
     </div>
+    
+    <script type="module">
+        import * as THREE from 'three';
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        const particlesConfig = {
-            "particles": { "number": { "value": 120, "density": { "enable": true, "value_area": 1000 } }, "color": { "value": "#00ffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.6, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 2.5, "random": true }, "line_linked": { "enable": true, "distance": 160, "color": "#00ffff", "opacity": 0.25, "width": 1 }, "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" } },
-            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }, "modes": { "grab": { "distance": 200, "line_opacity": 0.4 }, "push": { "particles_nb": 4 } } },
-            "retina_detect": true
-        };
-        particlesJS('particles-js', particlesConfig);
+        let scene, camera, renderer, particles, particleSystem;
+        let mouseX = 0, mouseY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+        
+        // --- Initialization ---
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+            camera.position.z = 1000;
 
-        const textToType = "Lu Luyu";
-        const typingSpeed = 180;
-        const textElement = document.getElementById('type-text');
-        let charIndex = 0;
-        function type() {
-            if (charIndex < textToType.length) {
-                textElement.textContent += textToType.charAt(charIndex);
-                charIndex++;
-                setTimeout(type, typingSpeed);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Create particle system
+            const particleCount = 20000;
+            particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            const color1 = new THREE.Color("#00BFFF"); // Electric Blue
+            const color2 = new THREE.Color("#FF00FF"); // Magenta
+
+            for (let i = 0; i < particleCount; i++) {
+                const x = Math.random() * 2000 - 1000;
+                const y = Math.random() * 2000 - 1000;
+                const z = Math.random() * 2000 - 1000;
+
+                positions[i * 3] = x;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = z;
+
+                const mixedColor = color1.clone().lerp(color2, Math.random());
+                colors[i * 3] = mixedColor.r;
+                colors[i * 3 + 1] = mixedColor.g;
+                colors[i * 3 + 2] = mixedColor.b;
             }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            // Event Listeners
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
         }
-        document.addEventListener('DOMContentLoaded', type);
+
+        // --- Event Handlers ---
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = event.clientX - windowHalfX;
+            mouseY = event.clientY - windowHalfY;
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.00005;
+            
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            particleSystem.rotation.y = time * 0.5;
+            particleSystem.rotation.x = time * 0.4;
+            
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+        
+        // --- Header Scroll & Nav Link Active State ---
+        const header = document.getElementById('header');
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.onscroll = () => {
+            if (window.scrollY > 50) {
+                header.style.backgroundColor = 'rgba(18, 18, 18, 0.8)';
+                header.style.backdropFilter = 'blur(10px)';
+                header.style.webkitBackdropFilter = 'blur(10px)';
+            } else {
+                header.style.backgroundColor = 'transparent';
+                header.style.backdropFilter = 'none';
+                header.style.webkitBackdropFilter = 'none';
+            }
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if(pageYOffset >= sectionTop - 60){
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href').includes(current)){
+                    link.classList.add('active');
+                }
+            })
+        };
+
     </script>
 </body>
 </html>
