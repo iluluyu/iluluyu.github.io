@@ -1,92 +1,705 @@
+:root {
+    --bg-void: #050508;
+    --glass-base: rgba(255, 255, 255, 0.005);  /* 从 0.015 降至 0.006，极度透明 */
+    --glass-border: rgba(255, 255, 255, 0.18);  /* 从 0.12 增至 0.18，增强边框 */
+    --glass-highlight: rgba(255, 255, 255, 0.08);
+    
+    /* Quantum neon colors */
+    --neon-purple: #bc13fe;
+    --neon-cyan: #00f3ff;
+    --neon-acid: #ccff00;
+    
+    --text-main: #ffffff;
+    --text-sub: rgba(255, 255, 255, 0.6);
+    
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --card-radius: 28px;
+}
+
 body {
+    background-color: var(--bg-void);
+    color: var(--text-main);
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    color: #ffffff;
-    background-color: #000000;
-    overflow: hidden; /* 隐藏滚动条 */
-}
-
-#bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
     height: 100vh;
-    z-index: -1;
-}
-
-#content-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    font-family: var(--font-display);
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-y: auto; /* 如果内容超长，允许滚动 */
 }
 
-#content {
+/* Background layers */
+#quantum-flow {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -2;
+}
+
+/* Noise overlay for premium texture */
+.noise-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.06;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Layout Grid */
+.layout-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: 220px 1fr 100px;
+    gap: 24px;
     width: 90%;
-    max-width: 800px;
-    text-align: center;
+    max-width: 1300px;
+    height: 85vh;
+}
+
+/* Enhanced Liquid Glass Panel Design */
+/* =========================================
+   OPTICAL CLEAR GLASS (高透光学玻璃)
+   ========================================= */
+   .glass-panel {
+    position: relative;
+    
+    /* 1. 极致透明：几乎完全透明，只留一点点色调来承载光影 */
+    background: rgba(255, 255, 255, 0.005); 
+    
+    /* 2. 降低模糊度：这是看清背景的关键 */
+    /* 之前的 20px 改为 5px，让背后的粒子只保留微微的散焦感，像透过眼镜看东西 */
+    backdrop-filter: blur(5px) saturate(110%);
+    -webkit-backdrop-filter: blur(5px) saturate(110%);
+    
+    border-radius: var(--card-radius);
+    
+    /* 3. 物理边框感：因为背景很透，需要用投影来勾勒轮廓，否则卡片会"消失" */
+    box-shadow: 
+        /* 顶部锐利高光，像切角玻璃 */
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 
+        /* 侧面微弱反光 */
+        inset 1px 0 0 0 rgba(255, 255, 255, 0.05),
+        inset -1px 0 0 0 rgba(255, 255, 255, 0.05),
+        /* 底部反光 */
+        inset 0 -1px 0 0 rgba(255, 255, 255, 0.05),
+        /* 外部投影，让玻璃浮起来 */
+        0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.4s;
+    cursor: pointer;
+    z-index: 1;
+    
+    /* 确保这个必须是 relative，让里面的 spotlight 绝对定位生效 */
+    overflow: hidden; 
+}
+
+/* =========================================
+   SC RAINBOW BORDER (保留你最喜欢的彩虹边框)
+   ========================================= */
+.glass-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-radius);
+    padding: 1.5px; /* 边框粗细 */
+    
+    /* 默认状态：极淡的白色边框 */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15), 
+        rgba(255, 255, 255, 0.05)
+    );
+    
+    /* 遮罩技术实现只有边框显示 */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    
+    transition: background 0.4s ease;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Hover 交互状态 */
+.glass-panel:hover {
+    transform: translateY(-2px);
+    /* 悬停时稍微增加一点点背景浓度，提升文字可读性 */
+    background: rgba(255, 255, 255, 0.02); 
+    backdrop-filter: blur(8px) saturate(120%); /* 悬停时稍微模糊一点，聚焦内容 */
+}
+
+/* Hover 时触发彩虹边框 */
+.glass-panel:hover::before {
+    background: linear-gradient(135deg, 
+        var(--neon-purple) 0%, 
+        var(--neon-cyan) 100%
+    );
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); /* 增加一点外发光 */
+}
+
+/* Spotlight effect (controlled by JS) */
+.spotlight {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    background: radial-gradient(
+        600px circle at var(--mouse-x) var(--mouse-y), 
+        rgba(255, 255, 255, 0.06),
+        transparent 50%
+    );
+}
+
+.layout-grid:hover .spotlight { 
+    opacity: 1; 
+}
+
+/* Content layer */
+.content-layer {
+    position: relative;
+    z-index: 2;
     padding: 40px;
-    background: rgba(20, 20, 30, 0.65); /* 深蓝色半透明背景 */
-    border-radius: 15px; /* 圆角 */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px); /* 毛玻璃效果 */
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 
-h1 {
-    font-size: 2.8rem;
-    margin: 0;
-    letter-spacing: 2px;
+/* ========== Profile Zone (Left) ========== */
+.profile-zone {
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 10, 20, 0.15) 0%,  /* 从 0.5 降至 0.15 */
+        rgba(15, 15, 25, 0.08) 100%   /* 从 0.3 降至 0.08 */
+    );
 }
 
-h2 {
-    font-size: 1.3rem;
-    font-weight: 300;
-    margin: 10px 0 25px 0;
-    color: #cccccc;
+.top-bar { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: auto; 
 }
 
-p {
+.badge { 
+    font-family: var(--font-mono); 
+    font-size: 0.75rem; 
+    color: var(--neon-acid); 
+    letter-spacing: 2px; 
+    text-shadow: 0 0 10px rgba(204, 255, 0, 0.3);
+}
+
+.badge-outline { 
+    font-family: var(--font-mono); 
+    font-size: 0.75rem; 
+    border: 1px solid rgba(255,255,255,0.25); 
+    padding: 2px 6px; 
+    border-radius: 6px; 
+    backdrop-filter: blur(10px);
+}
+
+/* Identity core: Ket notation */
+.identity-wrapper { 
+    margin: 40px 0; 
+}
+
+.ket-notation {
+    display: flex;
+    align-items: center;
+    font-weight: 200;
+    line-height: 1;
+}
+
+.bracket {
+    font-size: 7rem;
+    font-weight: 100;
+    color: var(--neon-purple);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 0 20px rgba(188, 19, 254, 0.3));
+}
+
+.name-glitch {
+    font-size: 5rem;
+    font-weight: 700;
+    margin: 0 15px;
+    letter-spacing: -2px;
+    color: white;
+    background: linear-gradient(to right, #fff 30%, var(--text-sub));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+}
+
+/* Hover animation: brackets expand */
+.profile-zone:hover .symbol-left { 
+    transform: translateX(-10px); 
+    color: var(--neon-cyan); 
+    filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.5));
+}
+
+.profile-zone:hover .symbol-right { 
+    transform: translateX(10px); 
+    color: var(--neon-cyan); 
+    filter: drop-shadow(0 0 25px rgba(0, 243, 255, 0.5));
+}
+
+.role-tag {
+    font-family: var(--font-mono);
+    color: var(--text-sub);
     font-size: 1.1rem;
-    line-height: 1.7;
-    color: #bbbbbb;
-    text-align: left;
+    margin-top: 10px;
+    padding-left: 10px;
 }
 
-h3 {
-    margin-top: 40px;
-    font-size: 1.6rem;
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-    text-align: left;
+.op { 
+    color: var(--neon-purple); 
+    font-weight: bold; 
+    margin: 0 5px; 
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-    text-align: left;
+.bio-text p { 
+    font-size: 1.2rem; 
+    line-height: 1.6; 
+    color: #ccc; 
+    margin: 0; 
+    max-width: 90%; 
 }
 
-li {
-    margin: 15px 0;
+.neon-text { 
+    color: var(--neon-cyan); 
+    font-weight: 600; 
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.5); 
 }
 
-a {
-    color: #00aaff;
+.sub-bio { 
+    font-size: 0.9rem !important; 
+    color: var(--text-sub) !important; 
+    margin-top: 10px !important; 
+    font-family: var(--font-mono); 
+}
+
+/* ========== Enhanced Contact Buttons ========== */
+.action-row { 
+    margin-top: auto; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center; 
+}
+
+/* =========================================
+   SILK PEARL BUTTON (丝绸珠光按钮 - 完美折中版)
+   ========================================= */
+   .pill-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 36px;
+    
+    /* 基础层：纯白 */
+    background: #ffffff;
+    color: #0b1020; /* 深色文字，保证清晰 */
+    
+    border-radius: 50px;
     text-decoration: none;
-    font-size: 1.1rem;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    
+    overflow: hidden;
+    z-index: 10;
+    
+    /* 平滑的物理形态过渡 */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                box-shadow 0.3s ease;
+    
+    /* 初始投影：干净 */
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
-a:hover {
-    color: #ffffff;
-    text-shadow: 0 0 8px #00aaff, 0 0 15px #00aaff;
+/* =========================================
+   LAYER: 增强型珠光流体 (Macaron Gradient)
+   ========================================= */
+.pill-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    
+    /* 核心调色：折中方案
+       既不是刺眼的霓虹色，也不是看不见的淡白色。
+       选用"马卡龙"色调，饱和度适中。
+       
+       关键修复：首尾闭环 (A -> B -> C -> A)
+       1. #e0aaff (淡紫 - 起点)
+       2. #aeeef0 (天青 - 中段)
+       3. #efffcd (嫩绿 - 中段)
+       4. #e0aaff (淡紫 - 终点，必须与起点完全一致！)
+    */
+    background: linear-gradient(
+        90deg, 
+        #e0aaff 0%,   /* 淡紫 A */
+        #aeeef0 33%,  /* 天青 B */
+        #efffcd 66%,  /* 嫩绿 C */
+        #e0aaff 100%  /* 淡紫 A (闭环) */
+    );
+    
+    /* 拉长背景，让颜色过渡非常平缓 */
+    background-size: 300% 100%;
+    
+    opacity: 0; /* 默认隐藏 */
+    transition: opacity 0.4s ease; /* 柔和淡入 */
+}
+
+/* =========================================
+   INTERACTION (交互)
+   ========================================= */
+.pill-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    
+    /* 外部光晕：保持高级感，外圈用稍亮的颜色提神 */
+    box-shadow: 
+        0 0 0 2px rgba(255, 255, 255, 0.9), /* 锐利白边，增加精致感 */
+        0 0 25px rgba(188, 19, 254, 0.3), /* 紫色柔光 */
+        0 0 40px rgba(0, 243, 255, 0.2); /* 青色氛围 */
+}
+
+/* Hover 时显示流体并开始无缝循环 */
+.pill-btn:hover::before {
+    opacity: 1;
+    /* 必须是 linear，否则首尾衔接处会有速度停顿 */
+    animation: silkFlow 3s linear infinite;
+}
+
+/* =========================================
+   ANIMATION (无缝循环)
+   ========================================= */
+@keyframes silkFlow {
+    0% { 
+        background-position: 0% 50%; 
+    }
+    100% { 
+        /* 移动到 100% 时，因为颜色和 0% 一样，所以人眼看不出跳变 */
+        background-position: 100% 50%; 
+    }
+}
+
+.pill-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 5px 15px rgba(188, 19, 254, 0.2);
+}
+
+.icon-group {
+    display: flex;
+    gap: 12px;
+}
+
+.circle-btn {
+    width: 56px; 
+    height: 56px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.circle-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 1.5px;
+    background: linear-gradient(135deg, 
+        rgba(188, 19, 254, 0.5), 
+        rgba(0, 243, 255, 0.5)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.circle-btn:hover::after {
+    opacity: 1;
+}
+
+.circle-btn:hover { 
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    color: white; 
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 
+        0 0 20px rgba(188, 19, 254, 0.4),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.circle-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* ========== Project Zone ========== */
+.project-zone {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    background: rgba(188, 19, 254, 0.03);
+    border-color: rgba(188, 19, 254, 0.3);  /* 稍微增强边框 */
+}
+
+.zone-label { 
+    font-family: var(--font-mono); 
+    font-size: 0.7rem; 
+    letter-spacing: 2px; 
+    color: var(--text-sub); 
+    margin-bottom: 10px; 
+}
+
+.project-hero { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.project-hero h2 { 
+    font-size: 3.5rem; 
+    margin: 0; 
+    line-height: 1; 
+    letter-spacing: -1px; 
+}
+
+.status-dot { 
+    width: 10px; 
+    height: 10px; 
+    background: var(--neon-acid); 
+    border-radius: 50%; 
+    box-shadow: 0 0 15px var(--neon-acid); 
+    animation: blink 2s infinite; 
+}
+
+.project-desc { 
+    font-size: 1rem; 
+    color: #ddd; 
+    margin: 15px 0; 
+    line-height: 1.4; 
+}
+
+.tech-pills { 
+    display: flex; 
+    gap: 8px; 
+    margin-top: auto; 
+}
+
+.tech-pills span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.tech-pills span:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+.vector-arrow { 
+    position: absolute; 
+    right: 30px; 
+    top: 30px; 
+    width: 40px; 
+    opacity: 0.4; 
+    transform: rotate(15deg); 
+    transition: all 0.3s ease;
+}
+
+.project-zone:hover .vector-arrow {
+    opacity: 0.7;
+    transform: rotate(15deg) translateX(5px) translateY(-5px);
+}
+
+/* ========== Paper Zone ========== */
+.paper-zone { 
+    background: rgba(20, 20, 30, 0.2); /* 仅保留极淡的底色以保证文字可读性 */
+}
+
+.paper-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    margin-top: 15px; 
+}
+
+.paper-item { 
+    display: flex; 
+    align-items: baseline; 
+    gap: 15px; 
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+    transition: all 0.3s ease;
+}
+
+.paper-item:last-child { 
+    border: none; 
+}
+
+.paper-item:hover {
+    padding-left: 8px;
+    border-bottom-color: rgba(255,255,255,0.15);
+}
+
+.year { 
+    font-family: var(--font-mono); 
+    color: var(--neon-cyan); 
+    font-size: 0.8rem; 
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+.title { 
+    font-size: 1rem; 
+    font-weight: 500; 
+    color: #eee; 
+    transition: color 0.3s ease;
+}
+
+.paper-item:hover .title {
+    color: #fff;
+}
+
+.state-tag { 
+    font-family: var(--font-mono); 
+    font-size: 0.65rem; 
+    padding: 4px 8px; 
+    border-radius: 6px; 
+    border: 1px solid var(--text-sub); 
+    color: var(--text-sub); 
+    margin-left: auto; 
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.state-tag.review { 
+    border-color: var(--neon-purple); 
+    color: var(--neon-purple); 
+    box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+}
+
+/* ========== Notes Zone ========== */
+.notes-zone { 
+    grid-column: 2 / 3; 
+    grid-row: 3 / 4; 
+}
+
+.center-content { 
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.center-content h3 { 
+    margin: 0; 
+    font-size: 1.2rem; 
+}
+
+.big-icon { 
+    font-size: 2.5rem; 
+    color: var(--text-sub); 
+    font-family: 'Times New Roman', serif; 
+    font-style: italic; 
+}
+
+/* ========== Mobile Responsive ========== */
+@media (max-width: 900px) {
+    body { 
+        height: auto; 
+        overflow-y: auto; 
+        display: block; 
+    }
+    
+    .layout-grid { 
+        display: flex; 
+        flex-direction: column; 
+        padding: 30px 20px; 
+        width: auto; 
+        height: auto; 
+    }
+    
+    .ket-notation { 
+        flex-wrap: wrap; 
+        justify-content: center; 
+    }
+    
+    .name-glitch { 
+        font-size: 3.5rem; 
+    }
+    
+    .bracket { 
+        font-size: 5rem; 
+    }
+    
+    .action-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .pill-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .icon-group {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ========== Animations ========== */
+@keyframes blink { 
+    0%, 100% { opacity: 1; } 
+    50% { opacity: 0.4; } 
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* 让圆圈内的图片居中并限制大小 */
+.circle-btn .btn-icon {
+    width: 40px;       /* 圆圈是 56px，图标 24px 比例比较协调 */
+    height: 40px;
+    object-fit: contain;
+    opacity: 0.8;      /* 默认稍微暗一点，和原来的文字颜色呼应 */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    pointer-events: none; /* 防止鼠标点在图片上时触发奇怪的拖拽行为 */
+}
+
+/* 悬停时图标变亮且稍微放大 */
+.circle-btn:hover .btn-icon {
+    opacity: 1;
+    transform: scale(1.1); /* 微微放大，增加动感 */
 }

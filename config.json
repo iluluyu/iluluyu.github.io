@@ -1,0 +1,35 @@
+{
+    "system": {
+        "version": "v2.5",
+        "status": "SYSTEM_ONLINE"
+    },
+    "profile": {
+        "name": "LU LUYU",
+        "role": "QUANTUM AI × PHYSICS",
+        "bio_primary": "Simulating the fabric of reality with <span class=\"neon-text\">Tensor Networks</span>.",
+        "bio_secondary": "Hunting for the limits of quantum learnability.",
+        "email": "lylu24@m.fudan.edu.cn",
+        "github": "https://github.com/yourusername",
+        "scholar": "https://scholar.google.com/citations?user=yourid"
+    },
+    "featured_project": {
+        "label": "PROJECT",
+        "name": "TBD",
+        "description": "TBD",
+        "tags": ["TBD"]
+    },
+    "papers": [
+        {
+            "year": "2025",
+            "title": "TBD",
+            "status": "PREP",
+            "type": "default" 
+        },
+        {
+            "year": "2024",
+            "title": "TBD",
+            "status": "REVIEW",
+            "type": "review"
+        }
+    ]
+}
