@@ -169,9 +169,8 @@ async function loadConfig() {
         // 2. Update Profile
         const nameEl = document.getElementById('profile-name');
         nameEl.textContent = data.profile.name;
-        nameEl.setAttribute('data-text', data.profile.name); // Update glitch effect attribute
+        nameEl.setAttribute('data-text', data.profile.name);
         
-        // Keep the ∇ operator, only replace text
         const roleContainer = document.querySelector('.role-tag');
         roleContainer.innerHTML = `<span class="op">∇</span> ${data.profile.role}`;
 
@@ -182,46 +181,57 @@ async function loadConfig() {
         document.getElementById('btn-github').href = data.profile.github;
         document.getElementById('btn-scholar').href = data.profile.scholar;
 
-        // 3. Update Featured Project
+        // 3. Update Featured Project (包含链接逻辑)
         document.getElementById('proj-label').textContent = data.featured_project.label;
         document.getElementById('proj-name').textContent = data.featured_project.name;
         document.getElementById('proj-desc').textContent = data.featured_project.description;
         
+        // [NEW] 设置 Project 卡片的链接
+        const projectLink = document.getElementById('project-link');
+        if (data.featured_project.url) {
+            projectLink.href = data.featured_project.url;
+        } else {
+            projectLink.removeAttribute('href'); // 如果没有链接，移除 href 防止跳转
+            projectLink.style.cursor = 'default';
+        }
+        
         const tagContainer = document.getElementById('proj-tags');
-        tagContainer.innerHTML = ''; // Clear existing
+        tagContainer.innerHTML = ''; 
         data.featured_project.tags.forEach(tag => {
             const span = document.createElement('span');
             span.textContent = tag;
             tagContainer.appendChild(span);
         });
 
-        // 4. Update Papers (The Loop)
+        // 4. Update Papers (包含链接逻辑)
         const paperList = document.getElementById('paper-list');
-        paperList.innerHTML = ''; // Clear existing
+        paperList.innerHTML = ''; 
         
         data.papers.forEach(paper => {
-            // Create container
-            const div = document.createElement('div');
-            div.className = 'paper-item';
+            // [NEW] 创建 a 标签而不是 div
+            const link = document.createElement('a');
+            link.className = 'paper-item';
+            // 设置链接，如果 json 里有 url 且不为空
+            if (paper.url) {
+                link.href = paper.url;
+                link.target = "_blank"; // 在新标签页打开论文
+            }
             
-            // Determine status class (e.g., adding 'review' class if needed)
             const statusClass = paper.type === 'review' ? 'state-tag review' : 'state-tag';
             
-            div.innerHTML = `
+            link.innerHTML = `
                 <span class="year">${paper.year}</span>
                 <span class="title">${paper.title}</span>
                 <span class="${statusClass}">${paper.status}</span>
             `;
             
-            paperList.appendChild(div);
+            paperList.appendChild(link);
         });
 
     } catch (error) {
         console.error('Error loading config:', error);
-        // Fallback if json fails loading
         document.getElementById('profile-name').textContent = "ERROR_LOAD";
     }
 }
 
-// Initialize Data Load
 document.addEventListener('DOMContentLoaded', loadConfig);

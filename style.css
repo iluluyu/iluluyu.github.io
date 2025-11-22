@@ -18,6 +18,35 @@
     --card-radius: 28px;
 }
 
+/* 添加通用重置，防止 a 标签破坏布局 */
+a {
+    text-decoration: none;
+    color: inherit; /* 继承文字颜色，防止变成蓝色 */
+}
+
+/* 针对作为卡片的 a 标签的修正 */
+a.glass-panel {
+    display: block; /* 确保 a 标签作为块级元素，填满网格 */
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+/* 针对论文列表项的修正 */
+.paper-item {
+    /* 确保它是 flex 布局 */
+    display: flex; 
+    align-items: baseline; 
+    gap: 15px; 
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+    transition: all 0.3s ease;
+    
+    /* [NEW] 确保作为链接时没有下划线和颜色变化 */
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
 body {
     background-color: var(--bg-void);
     color: var(--text-main);

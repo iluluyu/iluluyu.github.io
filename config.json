@@ -1,6 +1,6 @@
 {
     "system": {
-        "version": "v2.5",
+        "version": "v2.6",
         "status": "SYSTEM_ONLINE"
     },
     "profile": {
@@ -9,27 +9,30 @@
         "bio_primary": "Simulating the fabric of reality with <span class=\"neon-text\">Tensor Networks</span>.",
         "bio_secondary": "Hunting for the limits of quantum learnability.",
         "email": "lylu24@m.fudan.edu.cn",
-        "github": "https://github.com/yourusername",
+        "github": "https://github.com/iluluyu",
         "scholar": "https://scholar.google.com/citations?user=yourid"
     },
     "featured_project": {
         "label": "PROJECT",
-        "name": "TBD",
-        "description": "TBD",
-        "tags": ["TBD"]
+        "name": "Styx",
+        "description": "A Tensor Network based Quantum Circuit Simulator.",
+        "tags": ["Python", "Tensor Network", "Quantum"],
+        "url": "https://github.com/iluluyu/styx" 
     },
     "papers": [
         {
             "year": "2025",
-            "title": "TBD",
+            "title": "Deep Learning in Hilbert Space",
             "status": "PREP",
-            "type": "default" 
+            "type": "default",
+            "url": "https://arxiv.org/abs/example1"
         },
         {
             "year": "2024",
-            "title": "TBD",
+            "title": "Limits of Quantum Learnability",
             "status": "REVIEW",
-            "type": "review"
+            "type": "review",
+            "url": "https://arxiv.org/abs/example2"
         }
     ]
 }
